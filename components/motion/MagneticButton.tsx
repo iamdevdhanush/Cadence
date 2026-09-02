@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useEffect, useState, type MouseEvent, type ReactNode } from "react";
-import { motion, type MotionProps } from "framer-motion";
+import { useRef, useEffect, useState, type ReactNode, type MouseEvent } from "react";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface MagneticButtonProps extends Omit<MotionProps<"button">, "onMouseMove" | "onMouseLeave" | "onMouseEnter"> {
+interface MagneticButtonProps extends Omit<HTMLMotionProps<"button">, "onMouseMove" | "onMouseLeave" | "onMouseEnter"> {
   children: ReactNode;
   className?: string;
   variant?: "primary" | "secondary" | "ghost";
@@ -37,7 +37,7 @@ export function MagneticButton({
     const element = ref.current;
     if (!element) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: globalThis.MouseEvent) => {
       const rect = element.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;

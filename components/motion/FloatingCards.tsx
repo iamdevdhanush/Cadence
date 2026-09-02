@@ -10,6 +10,7 @@ interface FloatingCardProps {
   depth?: number;
   speed?: number;
   rotate?: boolean;
+  style?: React.CSSProperties;
 }
 
 export function FloatingCard({

@@ -226,7 +226,7 @@ export function StaggerItem({
       case "fade":
         return {
           hidden: { opacity: 0 },
-          visible: { opacity: 1, transition: { duration, delay, ease: "easeOut" } },
+          visible: { opacity: 1, transition: { duration, delay, ease: [0.4, 0, 0.2, 1] as const } },
         };
       default:
         return {

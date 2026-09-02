@@ -112,13 +112,11 @@ export function Header() {
             <a href="#login" className="text-sm font-medium text-text-muted hover:text-text transition-colors px-4 py-2 rounded-lg hover:bg-surface">
               Sign in
             </a>
-            <MagneticButton variant="primary" size="sm" className="group" asChild>
-              <a href="#audit">
-                <span className="flex items-center gap-2">
-                  Start Audit
-                  <ChevronDown className="w-4 h-4" aria-hidden="true" />
-                </span>
-              </a>
+            <MagneticButton variant="primary" className="group">
+              <span className="flex items-center gap-2">
+                Start Audit
+                <ChevronDown className="w-4 h-4" aria-hidden="true" />
+              </span>
             </MagneticButton>
           </div>
 
@@ -155,13 +153,11 @@ export function Header() {
               <a href="#login" className="text-sm font-medium text-text-muted hover:text-text px-4 py-2 rounded-lg hover:bg-surface transition-colors">
                 Sign in
               </a>
-              <MagneticButton variant="primary" size="sm" className="w-full" asChild>
-                <a href="#audit">
-                  <span className="flex items-center justify-center gap-2">
-                    Start Audit
-                    <ChevronDown className="w-4 h-4" aria-hidden="true" />
-                  </span>
-                </a>
+              <MagneticButton variant="primary" className="w-full">
+                <span className="flex items-center justify-center gap-2">
+                  Start Audit
+                  <ChevronDown className="w-4 h-4" aria-hidden="true" />
+                </span>
               </MagneticButton>
             </div>
           </div>

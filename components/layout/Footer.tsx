@@ -120,12 +120,13 @@ export function Footer() {
             </ScrollReveal>
 
             <ScrollReveal direction="fade" delay={0.2}>
-              <MagneticButton variant="ghost" size="sm" asChild>
-                <a href="#audit" className="flex items-center gap-2 text-sm font-medium">
-                  Start Audit
-                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                </a>
-              </MagneticButton>
+              <a
+                href="#audit"
+                className="btn-secondary px-4 py-2 text-sm group inline-flex items-center gap-2"
+              >
+                Start Audit
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              </a>
             </ScrollReveal>
           </div>
         </div>

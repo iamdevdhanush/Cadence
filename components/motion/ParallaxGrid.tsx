@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -78,8 +78,9 @@ export function ParallaxGrid({
           >
             {React.Children.map(children, (child) => {
               if (!React.isValidElement(child)) return child;
-              return React.cloneElement(child as React.ReactElement<any>, {
-                className: cn(child.props.className, `parallax-layer-${layerIndex}`),
+              const childElement = child as React.ReactElement<{ className?: string }>;
+              return React.cloneElement(childElement, {
+                className: cn(childElement.props.className, `parallax-layer-${layerIndex}`),
               });
             })}
           </motion.div>
@@ -93,8 +94,8 @@ export function ParallaxGrid({
 interface ScrollProgressProps {
   children: (progress: number) => React.ReactNode;
   className?: string;
-  start?: "top top" | "top center" | "top bottom" | "center center" | "bottom bottom";
-  end?: "top top" | "top center" | "top bottom" | "center center" | "bottom bottom";
+  start?: "top top" | "top center" | "top bottom" | "center center" | "bottom bottom" | "bottom top";
+  end?: "top top" | "top center" | "top bottom" | "center center" | "bottom bottom" | "bottom top";
   scrub?: number;
 }
 
