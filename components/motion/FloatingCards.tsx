@@ -19,6 +19,7 @@ export function FloatingCard({
   depth = 1,
   speed = 1,
   rotate = false,
+  style,
 }: FloatingCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -86,6 +87,7 @@ export function FloatingCard({
         boxShadow: isHovering
           ? `${shadowDepth[depth as keyof typeof shadowDepth]}, 0 0 40px -10px rgba(110, 231, 183, 0.2)`
           : shadowDepth[depth as keyof typeof shadowDepth],
+        ...style,
       }}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}

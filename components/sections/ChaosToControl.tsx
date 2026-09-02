@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ScrollProgress, ScrollTransform } from "@/components/motion/ParallaxGrid";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { cn } from "@/lib/utils";
 import {
   MessageSquare,

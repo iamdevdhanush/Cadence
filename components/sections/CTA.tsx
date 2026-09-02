@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/motion/ScrollReveal";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { cn } from "@/lib/utils";
@@ -44,7 +45,7 @@ export function CTA() {
             </StaggerItem>
 
             <StaggerItem direction="up">
-              <MagneticButton variant="primary" size="xl" className="group w-full sm:w-auto min-w-[280px]">
+              <MagneticButton variant="primary" className="group w-full sm:w-auto min-w-[280px] px-6 py-4 text-base">
                 <span className="flex items-center gap-3">
                   <span>Start Automation Audit</span>
                   <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />

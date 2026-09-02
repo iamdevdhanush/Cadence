@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/motion/ScrollReveal";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { DataFlow } from "@/components/motion/DataFlow";
