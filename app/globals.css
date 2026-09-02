@@ -1,7 +1,4 @@
 @import "tailwindcss";
-@import "@fontsource/geist";
-@import "@fontsource/inter";
-@import "@fontsource/geist-mono";
 
 @theme {
   --color-background: #050506;
@@ -18,9 +15,7 @@
   --color-border: #1E1E24;
   --color-border-hover: #2A2A32;
 
-  --font-heading: "Geist", sans-serif;
-  --font-body: "Inter", sans-serif;
-  --font-mono: "Geist Mono", monospace;
+  
 
   --shadow-elevation-1: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
   --shadow-elevation-2: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
