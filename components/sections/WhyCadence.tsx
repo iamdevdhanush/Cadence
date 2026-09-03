@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/motion/ScrollReveal";
 import { FloatingCard } from "@/components/motion/FloatingCards";
 import { cn } from "@/lib/utils";
