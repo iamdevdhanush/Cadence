@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, type ReactNode, type MouseEvent } from "react";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { cn } from "@/lib/utils";
 
 interface MagneticButtonProps extends Omit<HTMLMotionProps<"button">, "onMouseMove" | "onMouseLeave" | "onMouseEnter"> {
@@ -17,7 +17,7 @@ export function MagneticButton({
   children,
   className,
   variant = "primary",
-  magneticStrength = 0.3,
+  magneticStrength = 0.15,
   disabled = false,
   onClick,
   style,
@@ -57,16 +57,16 @@ export function MagneticButton({
   }, []);
 
   const variantStyles = {
-    primary: "btn-primary magnetic-btn",
-    secondary: "btn-secondary",
-    ghost: "btn-secondary bg-transparent",
+    primary: "magnetic-btn-primary",
+    secondary: "magnetic-btn-secondary",
+    ghost: "magnetic-btn-ghost",
   };
 
   const magneticStyle = {
     transform: `translate(${mousePosition.x * magneticStrength}px, ${mousePosition.y * magneticStrength}px)`,
     transition: isHovering
-      ? "transform 0.15s cubic-bezier(0.2, 0, 0, 1)"
-      : "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+      ? "transform 0.1s cubic-bezier(0.2, 0, 0, 1)"
+      : "transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
   };
 
   return (
@@ -78,7 +78,16 @@ export function MagneticButton({
       onMouseLeave={() => setIsHovering(false)}
       onClick={onClick}
       disabled={disabled}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.97 }}
+      whileHover={{
+        scale: 1.02,
+        boxShadow: variant === "primary" 
+          ? "0 0 40px -10px rgba(110, 231, 183, 0.5), 0 20px 40px -10px rgba(0, 0, 0, 0.3)"
+          : variant === "secondary"
+          ? "0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 30px -10px rgba(110, 231, 183, 0.2)"
+          : "0 10px 30px -10px rgba(0, 0, 0, 0.2)",
+      }}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
       {...props}
     >
       <span className="relative z-10 flex items-center gap-2">{children}</span>

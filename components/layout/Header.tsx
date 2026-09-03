@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { cn } from "@/lib/utils";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -14,10 +14,19 @@ const navItems = [
   { label: "Pricing", href: "#pricing" },
 ];
 
+const dropdownItems = {
+  Platform: ["Overview", "Features", "Integrations", "API Docs"],
+  Solutions: ["Finance Teams", "Operations", "Procurement", "Accounting"],
+  Resources: ["Documentation", "Blog", "Templates", "Community"],
+};
+
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [dropdownHovered, setDropdownHovered] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLHeaderElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,18 +36,41 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleDropdownEnter = (label: string) => {
+    setDropdownOpen(label);
+    setDropdownHovered(label);
+  };
+
+  const handleDropdownLeave = () => {
+    setDropdownOpen(null);
+    setDropdownHovered(null);
+  };
+
+  const handleDropdownContentEnter = () => {
+    setDropdownHovered(dropdownOpen);
+  };
+
+  const handleDropdownContentLeave = () => {
+    setDropdownHovered(null);
+    setTimeout(() => {
+      if (!dropdownHovered) setDropdownOpen(null);
+    }, 100);
+  };
+
   return (
     <header
+      ref={headerRef}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-premium",
         scrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border"
+          ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-elevation-1"
           : "bg-transparent"
       )}
+      style={{ height: "72px" }}
       role="banner"
     >
       <nav className="container px-6" aria-label="Main navigation">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between h-[72px]">
           <motion.a
             href="/"
             className="flex items-center gap-2 font-heading font-bold text-xl text-text z-10"
@@ -59,69 +91,38 @@ export function Header() {
             </span>
           </motion.a>
 
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <div key={item.label} className="relative">
-                {item.hasDropdown ? (
-                  <div className="relative">
-                    <button
-                      className="flex items-center gap-1 text-sm font-medium text-text-muted hover:text-text transition-colors px-2 py-1.5 rounded-lg hover:bg-surface"
-                      onMouseEnter={() => setDropdownOpen(item.label)}
-                      onMouseLeave={() => setDropdownOpen(null)}
-                      aria-expanded={dropdownOpen === item.label}
-                      aria-haspopup="true"
-                    >
-                      {item.label}
-                      <ChevronDown className="w-4 h-4 transition-transform" style={{ transform: dropdownOpen === item.label ? "rotate(180deg)" : "rotate(0deg)" }} aria-hidden="true" />
-                    </button>
-                    {dropdownOpen === item.label && (
-                      <motion.div
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 surface-card-elevated py-2 rounded-xl"
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        role="menu"
-                      >
-                        {["Overview", "Features", "Integrations", "API Docs"].map((link) => (
-                          <a
-                            key={link}
-                            href={`#${link.toLowerCase()}`}
-                            className="block px-4 py-2 text-sm text-text-muted hover:text-text hover:bg-accent-muted transition-colors"
-                            role="menuitem"
-                          >
-                            {link}
-                          </a>
-                        ))}
-                      </motion.div>
-                    )}
-                  </div>
-                ) : (
-                  <a
-                    href={item.href}
-                    className="text-sm font-medium text-text-muted hover:text-text transition-colors px-2 py-1.5 rounded-lg hover:bg-surface"
-                  >
-                    {item.label}
-                  </a>
-                )}
-              </div>
+              <NavItem
+                key={item.label}
+                item={item}
+                dropdownOpen={dropdownOpen}
+                dropdownHovered={dropdownHovered}
+                onEnter={handleDropdownEnter}
+                onLeave={handleDropdownLeave}
+                onContentEnter={handleDropdownContentEnter}
+                onContentLeave={handleDropdownContentLeave}
+              />
             ))}
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
-            <a href="#login" className="text-sm font-medium text-text-muted hover:text-text transition-colors px-4 py-2 rounded-lg hover:bg-surface">
+            <a
+              href="#login"
+              className="text-sm font-medium text-text-muted hover:text-text transition-colors px-4 py-2 rounded-lg hover:bg-surface focus-visible:focus-visible"
+            >
               Sign in
             </a>
-            <MagneticButton variant="primary" className="group">
+            <MagneticButton variant="primary" className="group px-6 py-2.5">
               <span className="flex items-center gap-2">
                 Start Audit
-                <ChevronDown className="w-4 h-4" aria-hidden="true" />
+                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" aria-hidden="true" />
               </span>
             </MagneticButton>
           </div>
 
           <button
-            className="lg:hidden p-2 rounded-lg text-text-muted hover:text-text hover:bg-surface transition-colors"
+            className="lg:hidden p-2 rounded-lg text-text-muted hover:text-text hover:bg-surface transition-colors focus-visible:focus-visible"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
@@ -131,38 +132,229 @@ export function Header() {
           </button>
         </div>
 
-        <motion.div
-          id="mobile-menu"
-          className="lg:hidden overflow-hidden border-t border-border"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: mobileMenuOpen ? 1 : 0, height: mobileMenuOpen ? "auto" : 0 }}
-          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        >
-          <div className="py-4 space-y-2">
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="block px-4 py-3 text-sm font-medium text-text-muted hover:text-text hover:bg-surface rounded-lg transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.label}
-              </a>
-            ))}
-            <div className="pt-4 border-t border-border flex flex-col gap-3">
-              <a href="#login" className="text-sm font-medium text-text-muted hover:text-text px-4 py-2 rounded-lg hover:bg-surface transition-colors">
-                Sign in
-              </a>
-              <MagneticButton variant="primary" className="w-full">
-                <span className="flex items-center justify-center gap-2">
-                  Start Audit
-                  <ChevronDown className="w-4 h-4" aria-hidden="true" />
-                </span>
-              </MagneticButton>
-            </div>
-          </div>
-        </motion.div>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              id="mobile-menu"
+              className="lg:hidden overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <div className="py-4 space-y-1 px-2">
+                {navItems.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="block px-4 py-3 text-sm font-medium text-text-muted hover:text-text hover:bg-surface rounded-lg transition-colors focus-visible:focus-visible"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <div className="pt-4 border-t border-border flex flex-col gap-3 px-2">
+                  <a
+                    href="#login"
+                    className="text-sm font-medium text-text-muted hover:text-text px-4 py-2 rounded-lg hover:bg-surface transition-colors focus-visible:focus-visible"
+                  >
+                    Sign in
+                  </a>
+                  <MagneticButton variant="primary" className="w-full px-4 py-3">
+                    <span className="flex items-center justify-center gap-2">
+                      Start Audit
+                      <ChevronDown className="w-4 h-4" aria-hidden="true" />
+                    </span>
+                  </MagneticButton>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {dropdownOpen && (
+            <motion.div
+              ref={dropdownRef}
+              className="absolute left-0 right-0 top-full bg-background/95 backdrop-blur-xl border-b border-border/50 lg:hidden"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <div className="py-4 px-6 space-y-3">
+                {dropdownItems[dropdownOpen as keyof typeof dropdownItems]?.map((link) => (
+                  <a
+                    key={link}
+                    href={`#${link.toLowerCase()}`}
+                    className="block px-4 py-2 text-sm text-text-muted hover:text-text hover:bg-surface rounded-lg transition-colors focus-visible:focus-visible"
+                  >
+                    {link}
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
+
+      {dropdownOpen && (
+        <DropdownPanel
+          label={dropdownOpen}
+          items={dropdownItems[dropdownOpen as keyof typeof dropdownItems] || []}
+          onEnter={handleDropdownContentEnter}
+          onLeave={handleDropdownContentLeave}
+        />
+      )}
     </header>
+  );
+}
+
+function NavItem({
+  item,
+  dropdownOpen,
+  dropdownHovered,
+  onEnter,
+  onLeave,
+  onContentEnter,
+  onContentLeave,
+}: {
+  item: typeof navItems[0];
+  dropdownOpen: string | null;
+  dropdownHovered: string | null;
+  onEnter: (label: string) => void;
+  onLeave: () => void;
+  onContentEnter: () => void;
+  onContentLeave: () => void;
+}) {
+  const isOpen = dropdownOpen === item.label;
+
+  if (!item.hasDropdown) {
+    return (
+      <a
+        href={item.href}
+        className="text-sm font-medium text-text-muted hover:text-text transition-colors px-4 py-2.5 rounded-lg hover:bg-surface focus-visible:focus-visible relative"
+      >
+        {item.label}
+        <motion.span
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 rounded-full"
+          style={{ background: "linear-gradient(90deg, #6EE7B7, #5AC8FA)" }}
+          initial={{ width: 0 }}
+          whileHover={{ width: "80%" }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+          aria-hidden="true"
+        />
+      </a>
+    );
+  }
+
+  return (
+    <div className="relative" onMouseEnter={onContentEnter} onMouseLeave={onContentLeave}>
+      <button
+        className="flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-text transition-colors px-4 py-2.5 rounded-lg hover:bg-surface focus-visible:focus-relative"
+        onMouseEnter={() => onEnter(item.label)}
+        onMouseLeave={onLeave}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+      >
+        {item.label}
+        <motion.span
+          className="ml-1"
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <ChevronDown className="w-4 h-4" aria-hidden="true" />
+        </motion.span>
+      </button>
+    </div>
+  );
+}
+
+function DropdownPanel({
+  label,
+  items,
+  onEnter,
+  onLeave,
+}: {
+  label: string;
+  items: string[];
+  onEnter: () => void;
+  onLeave: () => void;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ left: 0, width: 0 });
+
+  useEffect(() => {
+    const trigger = document.querySelector(`[aria-expanded="true"]`) as HTMLElement;
+    if (trigger && panelRef.current) {
+      const rect = trigger.getBoundingClientRect();
+      const panelRect = panelRef.current.getBoundingClientRect();
+      setPosition({
+        left: rect.left - panelRect.width / 2 + rect.width / 2,
+        width: panelRect.width,
+      });
+    }
+    window.addEventListener("resize", () => {
+      if (trigger && panelRef.current) {
+        const rect = trigger.getBoundingClientRect();
+        const panelRect = panelRef.current.getBoundingClientRect();
+        setPosition({
+          left: rect.left - panelRect.width / 2 + rect.width / 2,
+          width: panelRect.width,
+        });
+      }
+    });
+  }, [label]);
+
+  return (
+    <motion.div
+      ref={panelRef}
+      className="absolute left-0 top-full z-50 w-full lg:absolute lg:left-auto lg:top-full lg:mt-3"
+      style={{
+        left: typeof window !== "undefined" ? position.left : 0,
+        minWidth: Math.max(typeof window !== "undefined" ? position.width : 200, 200),
+      }}
+      initial={{ opacity: 0, y: -8, scaleY: 0.95 }}
+      animate={{ opacity: 1, y: 0, scaleY: 1 }}
+      exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
+      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      role="menu"
+    >
+      <motion.div
+        className="surface-card-elevated py-2 rounded-xl shadow-elevation-4 border border-border/50 overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15, delay: 0.05 }}
+      >
+        {items.map((link) => (
+          <a
+            key={link}
+            href={`#${link.toLowerCase()}`}
+            className="block px-4 py-2.5 text-sm text-text-muted hover:text-text hover:bg-accent-muted/50 transition-colors relative group focus-visible:focus-visible"
+            role="menuitem"
+          >
+            <span className="relative z-10">{link}</span>
+            <motion.span
+              className="absolute left-0 top-0 h-full w-0.5"
+              style={{ background: "linear-gradient(180deg, #6EE7B7, #5AC8FA)" }}
+              initial={{ height: 0 }}
+              whileHover={{ height: "100%" }}
+              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+              aria-hidden="true"
+            />
+          </a>
+        ))}
+      </motion.div>
+      <motion.div
+        className="absolute top-2 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45"
+        style={{ background: "var(--color-surface-elevated)", borderLeft: "1px solid var(--color-border)", borderTop: "1px solid var(--color-border)" }}
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.15, delay: 0.1 }}
+        aria-hidden="true"
+      />
+    </motion.div>
   );
 }

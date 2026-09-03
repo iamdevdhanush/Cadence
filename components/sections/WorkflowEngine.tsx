@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/motion/ScrollReveal";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { FloatingCard } from "@/components/motion/FloatingCards";
@@ -289,7 +289,7 @@ export function WorkflowEngine() {
 
         <div className="mt-16 text-center">
           <ScrollReveal direction="fade" delay={0.5}>
-            <MagneticButton variant="secondary" size="lg">
+            <MagneticButton variant="secondary" className="px-8 py-3.5 min-w-[240px]">
               <span>See technical architecture</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </MagneticButton>
