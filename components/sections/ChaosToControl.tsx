@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ScrollProgress, ScrollTransform } from "@/components/motion/ParallaxGrid";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
@@ -206,12 +206,12 @@ export function ChaosToControl() {
             <div className="w-full max-w-5xl px-4">
               <div className="flex items-center gap-4 lg:gap-8">
                 {organizedItems.map((item, index) => (
-                  <>
-                    <OrganizedCard key={item.id} item={item} index={index} progress={scrollProgress} />
+                  <React.Fragment key={item.id}>
+                    <OrganizedCard item={item} index={index} progress={scrollProgress} />
                     {index < organizedItems.length - 1 && (
                       <FlowArrow progress={scrollProgress} index={index} />
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
               </div>
 
