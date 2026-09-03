@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, type ReactNode, type MouseEvent } from "react";
-import { motion, type HTMLMotionProps } from "motion/react";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface MagneticButtonProps extends Omit<HTMLMotionProps<"button">, "onMouseMove" | "onMouseLeave" | "onMouseEnter"> {

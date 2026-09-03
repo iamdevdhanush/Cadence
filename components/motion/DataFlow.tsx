@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, animate, stagger } from "motion/react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface DataFlowProps {

@@ -9,7 +9,7 @@ export function createClient() {
         getAll() {
           return [];
         },
-        setAll() {},
+        setAll() { },
       },
     }
   );
