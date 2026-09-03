@@ -6,7 +6,31 @@ import { FloatingCard } from "@/components/motion/FloatingCards";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Check, X, Loader2, ChevronRight } from "lucide-react";
 
-const examples = [
+interface FlowStep {
+  step: string;
+  status: "complete" | "pending" | "warning";
+}
+
+interface Example {
+  id: string;
+  title: string;
+  subtitle: string;
+  input: {
+    label: string;
+    icon: string;
+    content: string;
+    metadata: string;
+  };
+  output: {
+    label: string;
+    icon: string;
+    content: string;
+    metadata: string;
+  };
+  flow: FlowStep[];
+}
+
+const examples: Example[] = [
   {
     id: "whatsapp-orders",
     title: "WhatsApp → Orders",

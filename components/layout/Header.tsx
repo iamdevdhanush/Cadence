@@ -26,7 +26,7 @@ export function Header() {
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [dropdownHovered, setDropdownHovered] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLHeaderElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
