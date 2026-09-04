@@ -1,42 +1,65 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/motion/ScrollReveal";
 import { MagneticButton } from "@/components/motion/MagneticButton";
-import { FloatingCard } from "@/components/motion/FloatingCards";
 import { cn } from "@/lib/utils";
 import {
   MessageSquare,
   FileText,
-  CheckCircle,
+  ShieldAlert,
   Zap,
   ArrowRight,
   ChevronRight,
-  Eye,
   Brain,
-  Shield,
+  ShieldCheck,
   Cpu,
+  Check,
+  Layers,
 } from "lucide-react";
 
-const stages = [
+interface Stage {
+  id: string;
+  label: string;
+  number: string;
+  icon: React.ElementType;
+  color: string;
+  accentClass: string;
+  borderClass: string;
+  bgGlow: string;
+  title: string;
+  tagline: string;
+  description: string;
+  capabilities: string[];
+  systemPreview: {
+    label: string;
+    value: string;
+  };
+}
+
+const stages: Stage[] = [
   {
     id: "capture",
     label: "CAPTURE",
     number: "01",
     icon: MessageSquare,
-    color: "#25D366",
-    bg: "rgba(37, 211, 102, 0.1)",
-    border: "rgba(37, 211, 102, 0.2)",
+    color: "#10B981",
+    accentClass: "text-emerald-400",
+    borderClass: "border-emerald-500/30",
+    bgGlow: "rgba(16, 185, 129, 0.08)",
     title: "Ingest from everywhere",
-    description: "WhatsApp, email, PDFs, spreadsheets, APIs — Cadence captures unstructured data from every channel your business uses.",
-    features: ["WhatsApp Business API", "Email parsing", "PDF/OCR ingestion", "API webhooks", "Manual upload"],
-    details: [
-      "Multi-format document parsing",
-      "Real-time message capture",
-      "Batch historical import",
-      "Custom channel connectors",
+    tagline: "Omni-channel listener",
+    description: "Captures unformatted text, voice notes, PDFs, Excel sheets, and email attachments the second they hit your accounts.",
+    capabilities: [
+      "WhatsApp Business API webhooks",
+      "Headless inbox parser (PDF, XLSX)",
+      "Continuous photo & scan intake",
     ],
+    systemPreview: {
+      label: "INBOUND PAYLOAD",
+      value: "WhatsApp #98765: 'Need 50x Widget Pro by Friday'",
+    },
   },
   {
     id: "understand",
@@ -44,259 +67,275 @@ const stages = [
     number: "02",
     icon: Brain,
     color: "#3B82F6",
-    bg: "rgba(59, 130, 246, 0.1)",
-    border: "rgba(59, 130, 246, 0.2)",
+    accentClass: "text-sky-400",
+    borderClass: "border-sky-500/30",
+    bgGlow: "rgba(59, 130, 246, 0.08)",
     title: "Extract meaning with AI",
-    description: "LLM-powered extraction understands context, not just keywords. It reads invoices, messages, and documents like a human — but faster.",
-    features: ["Layout-aware OCR", "Contextual NER", "Multi-language support", "Confidence scoring", "Custom field training"],
-    details: [
-      "Line-item extraction from invoices",
-      "Intent detection from messages",
-      "Currency & date normalization",
-      "Validation rule generation",
+    tagline: "Layout-aware context engine",
+    description: "Understands tabular relationships, handwriting variations, and intent. Converts chaotic documents into structured JSON.",
+    capabilities: [
+      "Multi-lingual extraction (Hindi, English, regional)",
+      "Line-item table reconstruction",
+      "Zero-shot entity normalization",
     ],
+    systemPreview: {
+      label: "STRUCTURED JSON",
+      value: "SKU: WP-100 | Qty: 50 | Due: 15-Mar | COD: Yes",
+    },
   },
   {
     id: "validate",
     label: "VALIDATE",
     number: "03",
-    icon: Shield,
+    icon: ShieldCheck,
     color: "#F59E0B",
-    bg: "rgba(245, 158, 11, 0.1)",
-    border: "rgba(245, 158, 11, 0.2)",
-    title: "Verify before you trust",
-    description: "Configurable rules engine catches discrepancies. Humans review only exceptions — not routine work.",
-    features: ["Cross-document matching", "Business rule engine", "Exception routing", "Audit trail", "Approval workflows"],
-    details: [
-      "PO-to-invoice 3-way match",
-      "Duplicate detection",
-      "Amount tolerance rules",
-      "Vendor master validation",
+    accentClass: "text-amber-400",
+    borderClass: "border-amber-500/30",
+    bgGlow: "rgba(245, 158, 11, 0.08)",
+    title: "Verify before trusting",
+    tagline: "Configurable business rules",
+    description: "Runs 3-way cross matches against existing Purchase Orders, vendor master data, and tax rules. Humans review exceptions only.",
+    capabilities: [
+      "3-way PO & bank statement match",
+      "GSTIN & vendor duplicate verification",
+      "Automated tolerance thresholds (0.5%)",
     ],
+    systemPreview: {
+      label: "VALIDATION PASS",
+      value: "PO-2024-0456 matched • 0.00% variance",
+    },
   },
   {
     id: "automate",
     label: "AUTOMATE",
     number: "04",
     icon: Zap,
-    color: "#A855F7",
-    bg: "rgba(168, 85, 247, 0.1)",
-    border: "rgba(168, 85, 247, 0.2)",
+    color: "#8B5CF6",
+    accentClass: "text-violet-400",
+    borderClass: "border-violet-500/30",
+    bgGlow: "rgba(139, 92, 246, 0.08)",
     title: "Execute end-to-end",
-    description: "Push validated data to ERPs, trigger payments, update inventory — all without human intervention for the happy path.",
-    features: ["ERP connectors (Tally, SAP, NetSuite)", "Payment initiation", "Inventory sync", "Report generation", "Webhook callbacks"],
-    details: [
-      "Journal entry creation",
-      "Vendor payment scheduling",
-      "Stock level updates",
-      "Compliance reporting",
+    tagline: "Zero-touch ledger sync",
+    description: "Directly creates journal entries, triggers supplier payment batches, updates warehouse inventory, and notifies stakeholders.",
+    capabilities: [
+      "Native sync (Tally, SAP, Zoho, NetSuite)",
+      "Automated WhatsApp delivery receipts",
+      "Full immutable audit trail log",
     ],
+    systemPreview: {
+      label: "LEDGER SYNCED",
+      value: "Receipt #REC-8921 posted • Inventory reserved",
+    },
   },
 ];
 
-function StageCard({ stage, index, isActive }: { stage: typeof stages[0]; index: number; isActive: boolean }) {
-  return (
-    <FloatingCard
-      depth={2}
-      speed={1}
-      className={cn(
-        "flex flex-col h-full relative overflow-hidden",
-        isActive && "ring-1", { "ring-accent/50": isActive }
-      )}
-      style={{
-        background: `linear-gradient(135deg, ${stage.bg}, transparent)`,
-        borderColor: stage.border,
-      }}
-    >
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl" style={{ background: stage.bg, border: `1px solid ${stage.border}` }}>
-            <stage.icon className="w-6 h-6" style={{ color: stage.color }} aria-hidden="true" />
-          </div>
-          <div>
-            <span className="font-mono text-xs text-text-subtle">{stage.number}</span>
-            <span className="ml-2 font-heading font-semibold text-sm text-text" style={{ color: stage.color }}>{stage.label}</span>
-          </div>
-        </div>
-        <div className="relative">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: stage.bg, border: `1px solid ${stage.border}` }}>
-            {isActive ? (
-              <CheckCircle className="w-5 h-5" style={{ color: stage.color }} aria-hidden="true" />
-            ) : (
-              <span className="font-mono text-xs text-text-subtle">{index + 1}</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <h3 className="font-heading font-semibold text-lg text-text mb-2">{stage.title}</h3>
-        <p className="text-text-muted text-sm leading-relaxed">{stage.description}</p>
-      </div>
-
-      <div className="flex-1 mb-6">
-        <ul className="space-y-2" role="list">
-          {stage.features.map((feature, i) => (
-            <li key={i} className="flex items-center gap-2 text-sm text-text-muted">
-              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: stage.color }} aria-hidden="true" />
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="pt-4 border-t border-border/50">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-text-subtle uppercase tracking-wide">Details</span>
-          <motion.button
-            className="flex items-center gap-1 text-sm font-medium transition-colors"
-            style={{ color: stage.color }}
-            whileHover={{ x: 4 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View details
-            <ChevronRight className="w-4 h-4" aria-hidden="true" />
-          </motion.button>
-        </div>
-      </div>
-    </FloatingCard>
-  );
-}
-
-function StageDetailPanel({ stage }: { stage: typeof stages[0] }) {
-  return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="stage-detail-title"
-    >
-      <motion.div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      />
-      <motion.div
-        className="relative surface-card-elevated max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col"
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl" style={{ background: stage.bg, border: `1px solid ${stage.border}` }}>
-              <stage.icon className="w-5 h-5" style={{ color: stage.color }} aria-hidden="true" />
-            </div>
-            <div>
-              <span className="font-mono text-xs text-text-subtle">{stage.number}</span>
-              <h3 id="stage-detail-title" className="font-heading font-semibold text-text ml-2">{stage.label}</h3>
-            </div>
-          </div>
-          <button
-            className="p-2 rounded-lg hover:bg-surface transition-colors"
-            aria-label="Close"
-          >
-            <svg className="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <div className="p-6 overflow-y-auto flex-1">
-          <p className="text-text-muted mb-6">{stage.details[0]}</p>
-          <h4 className="font-heading font-medium text-text mb-3">Capabilities</h4>
-          <ul className="space-y-2 mb-6" role="list">
-            {stage.details.slice(1).map((detail, i) => (
-              <li key={i} className="flex items-center gap-3 text-sm text-text-muted">
-                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: stage.color }} aria-hidden="true" />
-                {detail}
-              </li>
-            ))}
-          </ul>
-          <div className="flex items-center gap-3 p-4 rounded-xl" style={{ background: stage.bg, border: `1px solid ${stage.border}` }}>
-            <Eye className="w-5 h-5 flex-shrink-0" style={{ color: stage.color }} aria-hidden="true" />
-            <span className="text-sm text-text">Live demo available — see {stage.label.toLowerCase()} in action</span>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
 export function WorkflowEngine() {
-  const [activeStage, setActiveStage] = useState<number | null>(null);
-  const [showDetail, setShowDetail] = useState<typeof stages[0] | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: false, amount: 0.2 });
+  const [activeStep, setActiveStep] = useState(0);
+
+  // Progressive live pipeline step transition
+  useEffect(() => {
+    if (!isInView) return;
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % stages.length);
+    }, 3200);
+    return () => clearInterval(interval);
+  }, [isInView]);
 
   return (
-    <section className="relative section overflow-hidden">
+    <section id="workflow" className="relative section overflow-hidden py-24 lg:py-32">
       <div className="absolute inset-0 gradient-mesh" aria-hidden="true" />
+      <div className="absolute inset-0 grid-pattern" aria-hidden="true" />
       <div className="absolute inset-0 noise-overlay" aria-hidden="true" />
 
-      <div className="relative container">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <ScrollReveal direction="fade" delay={0.1}>
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-medium mb-4"
-              style={{ background: "rgba(110, 231, 183, 0.1)", color: "#6EE7B7", border: "1px solid rgba(110, 231, 183, 0.2)" }}>
-              How it works
+      <div className="relative container px-6 lg:px-12" ref={containerRef}>
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
+          <ScrollReveal direction="fade">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 mb-4">
+              <span>The Intelligent Pipeline</span>
             </span>
           </ScrollReveal>
-          <ScrollReveal direction="up" delay={0.2}>
-            <h2 className="font-heading font-black leading-[1.1] text-text mb-4">
-              How <span className="text-gradient-accent">Cadence thinks</span>
+
+          <ScrollReveal direction="up" delay={0.1}>
+            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.08] text-text mb-4">
+              How <span className="text-gradient-slow">Cadence thinks</span>
             </h2>
           </ScrollReveal>
-          <ScrollReveal direction="up" delay={0.3}>
-            <p className="text-lg text-text-muted">
-              Four stages. One seamless flow. Every document, message, and payment moves through the same intelligent pipeline.
+
+          <ScrollReveal direction="up" delay={0.2}>
+            <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-2xl mx-auto">
+              Four specialized stages. One continuous operational conduit. Unstructured inputs enter on the left; clean, reconciled business records emerge on the right.
             </p>
           </ScrollReveal>
         </div>
 
-        <div className="relative">
-          <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 h-px lg:hidden" style={{ background: "linear-gradient(90deg, transparent, var(--color-border), transparent)" }} aria-hidden="true" />
-          <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 hidden lg:block">
-            <div className="flex items-center justify-between">
-              {stages.map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="relative flex-1"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
+        {/* Progression Progress Bar (1 ↓ 2 ↓ 3 ↓ 4) */}
+        <div className="relative mb-10 max-w-4xl mx-auto hidden lg:block">
+          <div className="flex items-center justify-between relative z-10">
+            {stages.map((stage, idx) => {
+              const isCurrent = activeStep === idx;
+              const isPassed = activeStep > idx;
+
+              return (
+                <button
+                  key={`step-btn-${stage.id}`}
+                  onClick={() => setActiveStep(idx)}
+                  className="flex items-center gap-2 text-xs font-mono group focus:outline-none"
                 >
-                  {i < stages.length - 1 && (
-                    <div className="absolute top-1/2 left-1/2 right-1/2 h-px -translate-y-1/2" style={{ background: "linear-gradient(90deg, var(--color-border), var(--color-accent/30), var(--color-border))" }} aria-hidden="true" />
-                  )}
-                </motion.div>
-              ))}
-            </div>
+                  <span
+                    className={cn(
+                      "w-7 h-7 rounded-full flex items-center justify-center font-bold border transition-all duration-300",
+                      isCurrent
+                        ? "bg-white text-black border-white scale-110 shadow-elevation-2"
+                        : isPassed
+                        ? "bg-surface-elevated text-emerald-400 border-emerald-500/40"
+                        : "bg-surface text-text-subtle border-border group-hover:border-text-muted/40"
+                    )}
+                  >
+                    {isPassed ? <Check className="w-3.5 h-3.5" /> : stage.number}
+                  </span>
+                  <span
+                    className={cn(
+                      "font-heading font-semibold uppercase tracking-wider transition-colors",
+                      isCurrent
+                        ? "text-text"
+                        : isPassed
+                        ? "text-emerald-400"
+                        : "text-text-subtle group-hover:text-text-muted"
+                    )}
+                  >
+                    {stage.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
-          <StaggerContainer staggerDelay={0.1} className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stages.map((stage, index) => (
-              <StaggerItem key={stage.id} direction="up" delay={index * 0.1}>
-                <StageCard stage={stage} index={index} isActive={activeStage === index} />
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          {/* Animated Connective Energy Bar */}
+          <div className="absolute top-3.5 left-6 right-6 h-0.5 bg-border -z-0">
+            <motion.div
+              className="h-full bg-gradient-to-r from-emerald-400 via-sky-400 via-amber-400 to-violet-400"
+              animate={{ width: `${(activeStep / (stages.length - 1)) * 100}%` }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </div>
         </div>
 
+        {/* 4 Distinct Cards with Unique Identity & Rich Interior Contrast */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+          {stages.map((stage, index) => {
+            const isCurrent = activeStep === index;
+
+            return (
+              <motion.div
+                key={stage.id}
+                onClick={() => setActiveStep(index)}
+                animate={{
+                  y: isCurrent ? -4 : 0,
+                  scale: isCurrent ? 1.01 : 1,
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className={cn(
+                  "relative flex flex-col justify-between rounded-2xl p-6 border cursor-pointer transition-all duration-300",
+                  "bg-surface/90 hover:bg-surface-elevated/95",
+                  isCurrent
+                    ? `${stage.borderClass} shadow-elevation-3 bg-surface-elevated`
+                    : "border-border/80 shadow-elevation-1 hover:border-text-muted/30"
+                )}
+                style={{
+                  background: isCurrent
+                    ? `linear-gradient(180deg, ${stage.bgGlow} 0%, rgba(17, 17, 22, 0.95) 40%)`
+                    : undefined,
+                }}
+              >
+                {/* Header Badge */}
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div
+                      className="flex items-center justify-center w-11 h-11 rounded-xl"
+                      style={{
+                        background: `${stage.color}15`,
+                        border: `1px solid ${stage.color}35`,
+                        color: stage.color,
+                      }}
+                    >
+                      <stage.icon className="w-5 h-5" />
+                    </div>
+
+                    <div className="flex items-center gap-1.5 font-mono text-xs">
+                      <span className="text-text-subtle">{stage.number}</span>
+                      <span
+                        className={cn(
+                          "w-1.5 h-1.5 rounded-full",
+                          isCurrent ? "animate-pulse" : "opacity-40"
+                        )}
+                        style={{ background: stage.color }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <span
+                      className="text-[11px] font-mono tracking-wider uppercase font-semibold block mb-1"
+                      style={{ color: stage.color }}
+                    >
+                      {stage.tagline}
+                    </span>
+                    <h3 className="font-heading font-bold text-lg text-text">
+                      {stage.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-text-muted leading-relaxed mb-6">
+                    {stage.description}
+                  </p>
+                </div>
+
+                {/* Capabilities List */}
+                <div>
+                  <div className="space-y-2 mb-6 pt-4 border-t border-border/60">
+                    {stage.capabilities.map((cap, i) => (
+                      <div key={i} className="flex items-start gap-2 text-xs text-text-muted">
+                        <span
+                          className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ background: stage.color }}
+                        />
+                        <span>{cap}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Interior Contrast System Preview */}
+                  <div className="rounded-xl p-3 bg-black/60 border border-border/80 font-mono text-xs">
+                    <div className="text-[10px] text-text-subtle uppercase tracking-wider mb-1 flex items-center justify-between">
+                      <span>{stage.systemPreview.label}</span>
+                      <span className="text-[9px]" style={{ color: stage.color }}>Live</span>
+                    </div>
+                    <p className="text-text-muted text-[11px] truncate font-mono">
+                      {stage.systemPreview.value}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Action Link */}
         <div className="mt-16 text-center">
-          <ScrollReveal direction="fade" delay={0.5}>
-            <MagneticButton variant="secondary" className="px-8 py-3.5 min-w-[240px]">
-              <span>See technical architecture</span>
-              <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            </MagneticButton>
+          <ScrollReveal direction="fade" delay={0.3}>
+            <a
+              href="#real-examples"
+              className="btn-secondary group inline-flex items-center gap-2 px-8 py-3.5"
+            >
+              <span className="font-medium text-text">Explore Real-World Operations</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span className="grow-underline" aria-hidden="true" />
+            </a>
           </ScrollReveal>
         </div>
-
-        {showDetail && <StageDetailPanel stage={showDetail} />}
       </div>
     </section>
   );
