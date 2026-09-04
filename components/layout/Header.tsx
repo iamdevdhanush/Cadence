@@ -6,18 +6,26 @@ import { MagneticButton } from "@/components/motion/MagneticButton";
 import { cn } from "@/lib/utils";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-const navItems = [
-  { label: "Platform", href: "#platform", hasDropdown: true },
-  { label: "Solutions", href: "#solutions", hasDropdown: true },
-  { label: "Customers", href: "#customers" },
-  { label: "Resources", href: "#resources", hasDropdown: true },
-  { label: "Pricing", href: "#pricing" },
+interface NavItemType {
+  label: string;
+  href: string;
+  hasDropdown?: boolean;
+}
+
+const navItems: NavItemType[] = [
+  { label: "Pipeline", href: "#workflow", hasDropdown: false },
+  { label: "Transform", href: "#chaos-to-control", hasDropdown: false },
+  { label: "Examples", href: "#real-examples", hasDropdown: false },
+  { label: "Exceptions", href: "#built-for-exceptions", hasDropdown: false },
+  { label: "Why Cadence", href: "#why-cadence", hasDropdown: false },
 ];
 
-const dropdownItems = {
-  Platform: ["Overview", "Features", "Integrations", "API Docs"],
-  Solutions: ["Finance Teams", "Operations", "Procurement", "Accounting"],
-  Resources: ["Documentation", "Blog", "Templates", "Community"],
+const dropdownItems: Record<string, string[]> = {
+  Pipeline: ["Ingest Streams", "OCR & Parsing", "Rules Matching", "ERP Connectors"],
+  Transform: ["Unstructured to Structured", "Real-Time Sync"],
+  Examples: ["WhatsApp Orders", "PDF Invoices", "Bank Reconciliation"],
+  Exceptions: ["Tolerance Engine", "Human-in-the-Loop", "Audit Trail"],
+  "Why Cadence": ["Zero Migration", "Native Formats", "Rapid Pilot"],
 };
 
 export function Header() {
@@ -113,12 +121,15 @@ export function Header() {
             >
               Sign in
             </a>
-            <MagneticButton variant="primary" className="group px-6 py-2.5">
-              <span className="flex items-center gap-2">
+            <a
+              href="#audit"
+              className="btn-primary group px-5 py-2 text-xs font-semibold rounded-lg"
+            >
+              <span className="flex items-center gap-1.5">
                 Start Audit
-                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" aria-hidden="true" />
+                <ChevronDown className="w-3.5 h-3.5 -rotate-90 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
               </span>
-            </MagneticButton>
+            </a>
           </div>
 
           <button

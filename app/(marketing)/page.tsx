@@ -8,7 +8,7 @@ import { CTA } from "@/components/sections/CTA";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <div className="relative min-h-screen">
       <Hero />
       <ChaosToControl />
       <WorkflowEngine />
@@ -16,6 +16,6 @@ export default function HomePage() {
       <BuiltForExceptions />
       <WhyCadence />
       <CTA />
-    </main>
+    </div>
   );
 }
