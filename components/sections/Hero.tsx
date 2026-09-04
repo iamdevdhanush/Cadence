@@ -4,138 +4,117 @@ import { motion } from "framer-motion";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/motion/ScrollReveal";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { DataFlow } from "@/components/motion/DataFlow";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-start justify-center overflow-hidden pt-[72px]">
+    <section className="relative min-h-[calc(100vh-72px)] flex items-center justify-center overflow-hidden pt-6 lg:pt-10 pb-16">
+      {/* Atmosphere layers */}
       <div className="absolute inset-0 gradient-mesh" aria-hidden="true" />
       <div className="absolute inset-0 grid-pattern" aria-hidden="true" />
       <div className="absolute inset-0 noise-overlay" aria-hidden="true" />
 
-      <div className="relative container px-6 py-16 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start min-h-[calc(100vh-72px)]">
-          <div className="relative z-10 max-w-2xl mx-auto lg:mx-0 lg:max-w-none pt-8 lg:pt-0">
-            <StaggerContainer staggerDelay={0.08} delayChildren={0.1}>
-              <StaggerItem direction="fade" duration={0.6}>
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium"
-                  style={{ background: "rgba(110, 231, 183, 0.1)", color: "#6EE7B7", border: "1px solid rgba(110, 231, 183, 0.2)" }}>
-                  <Sparkles className="w-3 h-3" aria-hidden="true" />
-                  New: Automation Audit
-                </span>
+      <div className="relative container px-6 lg:px-12 py-8 lg:py-12">
+        <div className="grid lg:grid-cols-[55%_45%] gap-10 lg:gap-12 items-center">
+          {/* 55% Text Column */}
+          <div className="relative z-10 max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
+            <StaggerContainer staggerDelay={0.08} delayChildren={0.05}>
+              <StaggerItem direction="fade" duration={0.5}>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium backdrop-blur-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 mb-6">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                  <span>Free Automation Audit • 30-Min Analysis</span>
+                </div>
               </StaggerItem>
 
-              <StaggerItem direction="up" duration={0.7} delay={0.1}>
-                <h1 className="font-heading font-black leading-[0.95] text-text text-balance">
+              <StaggerItem direction="up" duration={0.7} delay={0.08}>
+                <h1 className="font-heading font-black text-4xl sm:text-5xl lg:text-[3.75rem] tracking-tight leading-[1.03] text-text text-balance">
                   Your operations are already digital.
                   <br />
-                  <span className="text-gradient-accent">They&apos;re just not connected.</span>
+                  <span className="text-gradient-slow">They&apos;re just not connected.</span>
                 </h1>
               </StaggerItem>
 
-              <StaggerItem direction="up" duration={0.7} delay={0.2}>
-                <p className="mt-8 text-lg max-w-xl text-text-muted leading-relaxed">
-                  Cadence connects WhatsApp messages, documents, spreadsheets and payments into one automated workflow.
+              <StaggerItem direction="up" duration={0.7} delay={0.16}>
+                <p className="mt-6 text-base sm:text-lg lg:text-xl text-text-muted leading-relaxed max-w-xl text-balance">
+                  Cadence unifies WhatsApp chats, supplier invoices, PDFs, spreadsheets, and bank reconciliations into a single, autonomous pipeline without replacing your ERP.
                 </p>
               </StaggerItem>
 
-              <StaggerItem direction="up" duration={0.6} delay={0.3}>
-                <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <MagneticButton variant="primary" className="group px-8 py-3.5 min-w-[200px]">
-                    <span className="flex items-center gap-2">
-                      Start an Automation Audit
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <StaggerItem direction="up" duration={0.6} delay={0.24}>
+                <div className="mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                  <MagneticButton
+                    variant="primary"
+                    className="group px-7 py-3.5 min-w-[220px] shadow-elevation-2"
+                  >
+                    <span className="flex items-center justify-center gap-2 font-medium">
+                      Start Automation Audit
+                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
                     </span>
                   </MagneticButton>
-                  <MagneticButton variant="secondary" className="group px-8 py-3.5 min-w-[200px]">
-                    <span className="flex items-center gap-2">
+
+                  <a
+                    href="#chaos-to-control"
+                    className="btn-secondary group px-7 py-3.5 min-w-[200px]"
+                  >
+                    <span className="flex items-center justify-center gap-2 font-medium text-text">
                       See the Workflow
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1.5" aria-hidden="true" />
                     </span>
-                  </MagneticButton>
+                    <span className="grow-underline" aria-hidden="true" />
+                  </a>
                 </div>
               </StaggerItem>
 
-              <StaggerItem direction="fade" duration={0.8} delay={0.5}>
-                <div className="mt-16 flex flex-wrap items-center gap-4 lg:gap-6 text-sm text-text-subtle">
+              {/* Truthful microcopy replacing fake enterprise claims */}
+              <StaggerItem direction="fade" duration={0.8} delay={0.35}>
+                <div className="mt-12 pt-8 border-t border-border/50 flex flex-wrap items-center gap-6 sm:gap-8 text-xs sm:text-sm text-text-subtle font-mono">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full" style={{ background: "#6EE7B7" }} aria-hidden="true" />
-                    Zero manual entry
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true" />
+                    <span className="text-text-muted">No new software</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full" style={{ background: "#5AC8FA" }} aria-hidden="true" />
-                    99.2% accuracy
+                    <span className="w-2 h-2 rounded-full bg-sky-400" aria-hidden="true" />
+                    <span className="text-text-muted">Built around your workflow</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full" style={{ background: "#A855F7" }} aria-hidden="true" />
-                    SOC 2 certified
+                    <span className="w-2 h-2 rounded-full bg-amber-400" aria-hidden="true" />
+                    <span className="text-text-muted">Free automation audit</span>
                   </div>
                 </div>
-              </StaggerItem>
-
-              <StaggerItem direction="up" duration={0.7} delay={0.6}>
-                <motion.div
-                  className="mt-12 p-6 rounded-2xl"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(110, 231, 183, 0.08), rgba(90, 200, 250, 0.05))",
-                    border: "1px solid rgba(110, 231, 183, 0.15)",
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-xl flex-shrink-0" style={{ background: "rgba(110, 231, 183, 0.15)", border: "1px solid rgba(110, 231, 183, 0.2)" }}>
-                      <Sparkles className="w-6 h-6 text-accent" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <p className="font-heading font-semibold text-text">Automation Audit</p>
-                      <p className="text-sm text-text-muted">We analyze one workflow free — no commitment</p>
-                    </div>
-                  </div>
-                </motion.div>
               </StaggerItem>
             </StaggerContainer>
           </div>
 
-          <div className="relative lg:pl-8">
-            <div className="relative aspect-[4/3] w-full max-w-lg lg:max-w-none mx-auto lg:mx-0">
-              <DataFlow speed={1} />
-            </div>
-
+          {/* 45% Visual Column: Integrated Connected System & Signature Moment */}
+          <div className="relative w-full lg:pl-4">
             <motion.div
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-xs lg:absolute lg:left-auto lg:right-0 lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 lg:w-80 lg:-right-24"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full"
             >
-              <div className="surface-card-elevated p-5 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-accent-secondary/10" aria-hidden="true" />
-                <div className="relative flex items-center gap-4">
-                  <div className="p-3 rounded-xl" style={{ background: "rgba(110, 231, 183, 0.15)", border: "1px solid rgba(110, 231, 183, 0.2)" }}>
-                    <Sparkles className="w-6 h-6 text-accent" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <p className="font-heading font-semibold text-text">Automation Audit</p>
-                    <p className="text-sm text-text-muted">We analyze one workflow free</p>
-                  </div>
-                </div>
-              </div>
+              <DataFlow speed={1} />
             </motion.div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">
+      {/* Subtle bottom scroll prompt */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 hidden md:block" aria-hidden="true">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 0.5, y: 0 }}
-          transition={{ delay: 2.2, duration: 1, ease: [0.4, 0, 0.2, 1] }}
-          className="text-text-subtle"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.4 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="text-text-subtle flex flex-col items-center gap-1 text-[11px] font-mono tracking-widest uppercase"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 5v14M19 12l-7 7-7-7" />
-          </svg>
+          <motion.div
+            animate={{ y: [0, 4, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M19 12l-7 7-7-7" />
+            </svg>
+          </motion.div>
         </motion.div>
       </div>
     </section>
