@@ -1,16 +1,21 @@
 'use client'
 
-import { forwardRef, type ButtonHTMLAttributes } from 'react'
+import { forwardRef, type ButtonHTMLAttributes, type AnchorHTMLAttributes, type ComponentPropsWithoutRef, type ElementType } from 'react'
 import { cn } from '@/lib/utils'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   isLoading?: boolean
+  asChild?: boolean
+}
+
+type PolymorphicButtonProps<C extends ElementType> = Omit<ComponentPropsWithoutRef<C>, keyof ButtonProps> & ButtonProps & {
+  as?: C
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, asChild, ...props }, ref) => {
     const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium transition-all duration-medium rounded-btn focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed'
 
     const variants = {
@@ -25,14 +30,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: 'px-10 py-5 text-body',
     }
 
+    const Comp = asChild ? 'span' : 'button'
+
     return (
-      <button
+      <Comp
         ref={ref}
         className={cn(baseStyles, variants[variant], sizes[size], className)}
-        disabled={disabled || isLoading}
-        {...props}
+        disabled={!asChild && (disabled || isLoading)}
+        {...(asChild ? {} : props)}
       >
-        {isLoading && (
+        {isLoading && !asChild && (
           <svg
             className="animate-spin h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +63,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </svg>
         )}
         {children}
-      </button>
+      </Comp>
     )
   }
 )
