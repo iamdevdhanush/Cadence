@@ -2,129 +2,100 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/motion/ScrollReveal";
-import { MagneticButton } from "@/components/motion/MagneticButton";
 import { cn } from "@/lib/utils";
 import {
   MessageSquare,
-  FileText,
-  ShieldAlert,
-  Zap,
-  ArrowRight,
-  ChevronRight,
-  Brain,
+  FileCode2,
   ShieldCheck,
-  Cpu,
-  Check,
-  Layers,
+  CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
 
-interface Stage {
+interface WorkflowStep {
   id: string;
-  label: string;
-  number: string;
-  icon: React.ElementType;
-  color: string;
-  accentClass: string;
-  borderClass: string;
-  bgGlow: string;
+  stage: string;
+  stepNumber: string;
   title: string;
-  tagline: string;
   description: string;
-  capabilities: string[];
-  systemPreview: {
-    label: string;
-    value: string;
+  icon: React.ElementType;
+  mockup: {
+    header: string;
+    badge: string;
+    details: { label: string; val: string }[];
   };
 }
 
-const stages: Stage[] = [
+const steps: WorkflowStep[] = [
   {
     id: "capture",
-    label: "CAPTURE",
-    number: "01",
+    stage: "Capture",
+    stepNumber: "01",
+    title: "Ingest from every source",
+    description:
+      "Direct webhooks for WhatsApp Business, headless mailbox parsers for supplier invoices, and secure folders for Excel drops.",
     icon: MessageSquare,
-    color: "#10B981",
-    accentClass: "text-emerald-400",
-    borderClass: "border-emerald-500/30",
-    bgGlow: "rgba(16, 185, 129, 0.08)",
-    title: "Ingest from everywhere",
-    tagline: "Omni-channel listener",
-    description: "Captures unformatted text, voice notes, PDFs, Excel sheets, and email attachments the second they hit your accounts.",
-    capabilities: [
-      "WhatsApp Business API webhooks",
-      "Headless inbox parser (PDF, XLSX)",
-      "Continuous photo & scan intake",
-    ],
-    systemPreview: {
-      label: "INBOUND PAYLOAD",
-      value: "WhatsApp #98765: 'Need 50x Widget Pro by Friday'",
+    mockup: {
+      header: "Inbound Stream",
+      badge: "Webhook Active",
+      details: [
+        { label: "Source", val: "WhatsApp Business API" },
+        { label: "Payload", val: "Text & Image attachments" },
+        { label: "Status", val: "Ingested without delay" },
+      ],
     },
   },
   {
     id: "understand",
-    label: "UNDERSTAND",
-    number: "02",
-    icon: Brain,
-    color: "#3B82F6",
-    accentClass: "text-sky-400",
-    borderClass: "border-sky-500/30",
-    bgGlow: "rgba(59, 130, 246, 0.08)",
-    title: "Extract meaning with AI",
-    tagline: "Layout-aware context engine",
-    description: "Understands tabular relationships, handwriting variations, and intent. Converts chaotic documents into structured JSON.",
-    capabilities: [
-      "Multi-lingual extraction (Hindi, English, regional)",
-      "Line-item table reconstruction",
-      "Zero-shot entity normalization",
-    ],
-    systemPreview: {
-      label: "STRUCTURED JSON",
-      value: "SKU: WP-100 | Qty: 50 | Due: 15-Mar | COD: Yes",
+    stage: "Understand",
+    stepNumber: "02",
+    title: "Structure raw inputs",
+    description:
+      "Layout-aware extraction isolates line items, quantities, tax breakdowns, and payment references into standard schemas.",
+    icon: FileCode2,
+    mockup: {
+      header: "Schema Normalization",
+      badge: "JSON Valid",
+      details: [
+        { label: "Document", val: "Tax Invoice PDF" },
+        { label: "Extraction", val: "12 Line items mapped" },
+        { label: "GSTIN", val: "27AAACA1234F verified" },
+      ],
     },
   },
   {
     id: "validate",
-    label: "VALIDATE",
-    number: "03",
+    stage: "Validate",
+    stepNumber: "03",
+    title: "3-Way verification",
+    description:
+      "Cross-checks amounts against your Purchase Orders, vendor master records, and tolerance rules. Flags anomalies for your team.",
     icon: ShieldCheck,
-    color: "#F59E0B",
-    accentClass: "text-amber-400",
-    borderClass: "border-amber-500/30",
-    bgGlow: "rgba(245, 158, 11, 0.08)",
-    title: "Verify before trusting",
-    tagline: "Configurable business rules",
-    description: "Runs 3-way cross matches against existing Purchase Orders, vendor master data, and tax rules. Humans review exceptions only.",
-    capabilities: [
-      "3-way PO & bank statement match",
-      "GSTIN & vendor duplicate verification",
-      "Automated tolerance thresholds (0.5%)",
-    ],
-    systemPreview: {
-      label: "VALIDATION PASS",
-      value: "PO-2024-0456 matched • 0.00% variance",
+    mockup: {
+      header: "Validation Engine",
+      badge: "0.0% Variance",
+      details: [
+        { label: "PO Match", val: "PO-2024-0456 matched" },
+        { label: "Rate Card", val: "Contract pricing confirmed" },
+        { label: "Exception", val: "None. Tolerance cleared" },
+      ],
     },
   },
   {
     id: "automate",
-    label: "AUTOMATE",
-    number: "04",
-    icon: Zap,
-    color: "#8B5CF6",
-    accentClass: "text-violet-400",
-    borderClass: "border-violet-500/30",
-    bgGlow: "rgba(139, 92, 246, 0.08)",
-    title: "Execute end-to-end",
-    tagline: "Zero-touch ledger sync",
-    description: "Directly creates journal entries, triggers supplier payment batches, updates warehouse inventory, and notifies stakeholders.",
-    capabilities: [
-      "Native sync (Tally, SAP, Zoho, NetSuite)",
-      "Automated WhatsApp delivery receipts",
-      "Full immutable audit trail log",
-    ],
-    systemPreview: {
-      label: "LEDGER SYNCED",
-      value: "Receipt #REC-8921 posted • Inventory reserved",
+    stage: "Automate",
+    stepNumber: "04",
+    title: "Post clean records",
+    description:
+      "Creates balanced journal entries in Tally, SAP, or Zoho Books, updates inventory, and notifies vendors with delivery receipts.",
+    icon: CheckCircle2,
+    mockup: {
+      header: "Ledger Execution",
+      badge: "ERP Synced",
+      details: [
+        { label: "Voucher", val: "JV-2024-8921 posted" },
+        { label: "Inventory", val: "Stock allocated" },
+        { label: "Audit Log", val: "Cryptographically signed" },
+      ],
     },
   },
 ];
@@ -134,208 +105,151 @@ export function WorkflowEngine() {
   const isInView = useInView(containerRef, { once: false, amount: 0.2 });
   const [activeStep, setActiveStep] = useState(0);
 
-  // Progressive live pipeline step transition
+  // Gentle, restrained automatic flow
   useEffect(() => {
     if (!isInView) return;
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % stages.length);
-    }, 3200);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % steps.length);
+    }, 4000);
+    return () => clearInterval(timer);
   }, [isInView]);
 
   return (
-    <section id="workflow" className="relative section overflow-hidden py-24 lg:py-32">
-      <div className="absolute inset-0 gradient-mesh" aria-hidden="true" />
-      <div className="absolute inset-0 grid-pattern" aria-hidden="true" />
-      <div className="absolute inset-0 noise-overlay" aria-hidden="true" />
-
-      <div className="relative container px-6 lg:px-12" ref={containerRef}>
+    <section id="workflow" className="section relative border-t border-[rgba(255,255,255,0.06)]" ref={containerRef}>
+      <div className="container px-6 lg:px-12">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-          <ScrollReveal direction="fade">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 mb-4">
-              <span>The Intelligent Pipeline</span>
-            </span>
-          </ScrollReveal>
-
-          <ScrollReveal direction="up" delay={0.1}>
-            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.08] text-text mb-4">
-              How <span className="text-gradient-slow">Cadence thinks</span>
-            </h2>
-          </ScrollReveal>
-
-          <ScrollReveal direction="up" delay={0.2}>
-            <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-2xl mx-auto">
-              Four specialized stages. One continuous operational conduit. Unstructured inputs enter on the left; clean, reconciled business records emerge on the right.
-            </p>
-          </ScrollReveal>
+        <div className="max-w-[620px] mb-16 lg:mb-20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.04] text-[#9EA0A8] border border-[rgba(255,255,255,0.08)] mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#63E6BE]" />
+            <span>Horizontal Architecture</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-4">
+            One continuous, verified pipeline.
+          </h2>
+          <p className="text-base sm:text-lg text-[#9EA0A8] leading-relaxed">
+            From chaotic unformatted messages to synchronized general ledger entries, your operational flow moves in four transparent stages.
+          </p>
         </div>
 
-        {/* Progression Progress Bar (1 ↓ 2 ↓ 3 ↓ 4) */}
-        <div className="relative mb-10 max-w-4xl mx-auto hidden lg:block">
-          <div className="flex items-center justify-between relative z-10">
-            {stages.map((stage, idx) => {
-              const isCurrent = activeStep === idx;
-              const isPassed = activeStep > idx;
+        {/* Horizontal Timeline Bar */}
+        <div className="hidden lg:grid grid-cols-4 relative mb-12">
+          {/* Subtle horizontal connecting line */}
+          <div className="absolute top-5 left-8 right-8 h-[1px] bg-[rgba(255,255,255,0.08)] -z-0" />
+          
+          {/* Animated subtle progress indicator line */}
+          <motion.div
+            className="absolute top-5 left-8 h-[1px] bg-[#63E6BE] -z-0 transition-all duration-500"
+            style={{ width: `${(activeStep / (steps.length - 1)) * 88}%` }}
+          />
 
-              return (
-                <button
-                  key={`step-btn-${stage.id}`}
-                  onClick={() => setActiveStep(idx)}
-                  className="flex items-center gap-2 text-xs font-mono group focus:outline-none"
-                >
-                  <span
-                    className={cn(
-                      "w-7 h-7 rounded-full flex items-center justify-center font-bold border transition-all duration-300",
-                      isCurrent
-                        ? "bg-white text-black border-white scale-110 shadow-elevation-2"
-                        : isPassed
-                        ? "bg-surface-elevated text-emerald-400 border-emerald-500/40"
-                        : "bg-surface text-text-subtle border-border group-hover:border-text-muted/40"
-                    )}
-                  >
-                    {isPassed ? <Check className="w-3.5 h-3.5" /> : stage.number}
-                  </span>
-                  <span
-                    className={cn(
-                      "font-heading font-semibold uppercase tracking-wider transition-colors",
-                      isCurrent
-                        ? "text-text"
-                        : isPassed
-                        ? "text-emerald-400"
-                        : "text-text-subtle group-hover:text-text-muted"
-                    )}
-                  >
-                    {stage.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Animated Connective Energy Bar */}
-          <div className="absolute top-3.5 left-6 right-6 h-0.5 bg-border -z-0">
-            <motion.div
-              className="h-full bg-gradient-to-r from-emerald-400 via-sky-400 via-amber-400 to-violet-400"
-              animate={{ width: `${(activeStep / (stages.length - 1)) * 100}%` }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </div>
-        </div>
-
-        {/* 4 Distinct Cards with Unique Identity & Rich Interior Contrast */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-          {stages.map((stage, index) => {
-            const isCurrent = activeStep === index;
+          {steps.map((step, idx) => {
+            const isActive = activeStep === idx;
+            const isPassed = activeStep > idx;
 
             return (
-              <motion.div
-                key={stage.id}
-                onClick={() => setActiveStep(index)}
-                animate={{
-                  y: isCurrent ? -4 : 0,
-                  scale: isCurrent ? 1.01 : 1,
-                }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className={cn(
-                  "relative flex flex-col justify-between rounded-2xl p-6 border cursor-pointer transition-all duration-300",
-                  "bg-surface/90 hover:bg-surface-elevated/95",
-                  isCurrent
-                    ? `${stage.borderClass} shadow-elevation-3 bg-surface-elevated`
-                    : "border-border/80 shadow-elevation-1 hover:border-text-muted/30"
-                )}
-                style={{
-                  background: isCurrent
-                    ? `linear-gradient(180deg, ${stage.bgGlow} 0%, rgba(17, 17, 22, 0.95) 40%)`
-                    : undefined,
-                }}
+              <button
+                key={step.id}
+                onClick={() => setActiveStep(idx)}
+                className="group flex flex-col items-start text-left pr-6 relative z-10 focus:outline-none"
               >
-                {/* Header Badge */}
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div
-                      className="flex items-center justify-center w-11 h-11 rounded-xl"
-                      style={{
-                        background: `${stage.color}15`,
-                        border: `1px solid ${stage.color}35`,
-                        color: stage.color,
-                      }}
-                    >
-                      <stage.icon className="w-5 h-5" />
-                    </div>
-
-                    <div className="flex items-center gap-1.5 font-mono text-xs">
-                      <span className="text-text-subtle">{stage.number}</span>
-                      <span
-                        className={cn(
-                          "w-1.5 h-1.5 rounded-full",
-                          isCurrent ? "animate-pulse" : "opacity-40"
-                        )}
-                        style={{ background: stage.color }}
-                      />
-                    </div>
+                {/* Node indicator */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className={cn(
+                      "w-10 h-10 rounded-lg flex items-center justify-center border transition-all text-xs font-mono font-medium",
+                      isActive
+                        ? "bg-[#141619] border-[#63E6BE] text-white"
+                        : isPassed
+                        ? "bg-[#0C0D0F] border-[rgba(255,255,255,0.16)] text-[#63E6BE]"
+                        : "bg-[#0C0D0F] border-[rgba(255,255,255,0.08)] text-[#60636C]"
+                    )}
+                  >
+                    {step.stepNumber}
                   </div>
-
-                  <div className="mb-4">
+                  <div>
                     <span
-                      className="text-[11px] font-mono tracking-wider uppercase font-semibold block mb-1"
-                      style={{ color: stage.color }}
+                      className={cn(
+                        "text-xs font-mono tracking-wider uppercase block",
+                        isActive ? "text-[#63E6BE]" : "text-[#60636C]"
+                      )}
                     >
-                      {stage.tagline}
+                      Stage {step.stepNumber}
                     </span>
-                    <h3 className="font-heading font-bold text-lg text-text">
-                      {stage.title}
-                    </h3>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-text-muted leading-relaxed mb-6">
-                    {stage.description}
-                  </p>
-                </div>
-
-                {/* Capabilities List */}
-                <div>
-                  <div className="space-y-2 mb-6 pt-4 border-t border-border/60">
-                    {stage.capabilities.map((cap, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-text-muted">
-                        <span
-                          className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
-                          style={{ background: stage.color }}
-                        />
-                        <span>{cap}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Interior Contrast System Preview */}
-                  <div className="rounded-xl p-3 bg-black/60 border border-border/80 font-mono text-xs">
-                    <div className="text-[10px] text-text-subtle uppercase tracking-wider mb-1 flex items-center justify-between">
-                      <span>{stage.systemPreview.label}</span>
-                      <span className="text-[9px]" style={{ color: stage.color }}>Live</span>
-                    </div>
-                    <p className="text-text-muted text-[11px] truncate font-mono">
-                      {stage.systemPreview.value}
-                    </p>
+                    <span
+                      className={cn(
+                        "text-sm font-medium transition-colors",
+                        isActive ? "text-white" : "text-[#9EA0A8] group-hover:text-white"
+                      )}
+                    >
+                      {step.stage}
+                    </span>
                   </div>
                 </div>
-              </motion.div>
+              </button>
             );
           })}
         </div>
 
-        {/* Action Link */}
-        <div className="mt-16 text-center">
-          <ScrollReveal direction="fade" delay={0.3}>
-            <a
-              href="#real-examples"
-              className="btn-secondary group inline-flex items-center gap-2 px-8 py-3.5"
-            >
-              <span className="font-medium text-text">Explore Real-World Operations</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-              <span className="grow-underline" aria-hidden="true" />
-            </a>
-          </ScrollReveal>
+        {/* Horizontal Timeline Grid / Active Card Display */}
+        <div className="grid lg:grid-cols-4 gap-6">
+          {steps.map((step, idx) => {
+            const isActive = activeStep === idx;
+
+            return (
+              <div
+                key={step.id}
+                onClick={() => setActiveStep(idx)}
+                className={cn(
+                  "p-6 rounded-xl border transition-all duration-200 cursor-pointer flex flex-col justify-between",
+                  isActive
+                    ? "bg-[#0C0D0F] border-[#63E6BE]/40 shadow-lg"
+                    : "bg-[#0C0D0F]/60 border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)]"
+                )}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-mono text-[#60636C] uppercase">
+                      0{idx + 1} // {step.stage}
+                    </span>
+                    <div
+                      className={cn(
+                        "w-2 h-2 rounded-full",
+                        isActive ? "bg-[#63E6BE]" : "bg-[rgba(255,255,255,0.1)]"
+                      )}
+                    />
+                  </div>
+
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    {step.title}
+                  </h3>
+
+                  <p className="text-xs text-[#9EA0A8] leading-relaxed mb-6">
+                    {step.description}
+                  </p>
+                </div>
+
+                {/* Micro Realistic SaaS UI */}
+                <div className="rounded-lg bg-[#050607] border border-[rgba(255,255,255,0.06)] p-3 text-[11px] font-mono">
+                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-[rgba(255,255,255,0.06)]">
+                    <span className="text-white font-medium">{step.mockup.header}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.05] text-[#9EA0A8]">
+                      {step.mockup.badge}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {step.mockup.details.map((detail, dIdx) => (
+                      <div key={dIdx} className="flex justify-between items-center text-[10px]">
+                        <span className="text-[#60636C]">{detail.label}</span>
+                        <span className="text-[#9EA0A8] truncate max-w-[120px]">{detail.val}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
+
       </div>
     </section>
   );

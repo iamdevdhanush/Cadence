@@ -80,12 +80,10 @@ export function MagneticButton({
       disabled={disabled}
       whileTap={{ scale: 0.97 }}
       whileHover={{
-        scale: 1.02,
+        scale: 1.01,
         boxShadow: variant === "primary" 
-          ? "0 0 40px -10px rgba(110, 231, 183, 0.5), 0 20px 40px -10px rgba(0, 0, 0, 0.3)"
-          : variant === "secondary"
-          ? "0 20px 40px -10px rgba(0, 0, 0, 0.3), 0 0 30px -10px rgba(110, 231, 183, 0.2)"
-          : "0 10px 30px -10px rgba(0, 0, 0, 0.2)",
+          ? "0 4px 14px 0 rgba(99, 230, 190, 0.25)"
+          : "0 4px 12px 0 rgba(0, 0, 0, 0.4)",
       }}
       transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
       {...props}

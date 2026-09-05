@@ -1,363 +1,234 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { MessageSquare, FileText, Table, CreditCard, Check, ArrowRight, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  MessageSquare,
-  FileText,
-  Table,
-  CreditCard,
-  CheckCircle2,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Zap,
-} from "lucide-react";
 
-interface WorkflowPair {
-  id: string;
-  source: string;
-  sourceType: string;
-  sourceContent: string;
-  sourceMeta: string;
-  sourceIcon: React.ElementType;
-  sourceColor: string;
-  targetStage: string;
-  targetAction: string;
-  targetOutput: string;
-  targetMeta: string;
-  scatteredX: number;
-  scatteredY: number;
-  scatteredRotate: number;
-}
-
-const workflowPairs: WorkflowPair[] = [
+const rawInputs = [
   {
     id: "whatsapp",
-    source: "WhatsApp Chat",
-    sourceType: "Unstructured Chat",
-    sourceContent: "📱 Rajesh: Need 50x Widget Pro by Friday. COD to Bangalore warehouse. Urgent!",
-    sourceMeta: "Raw text • 14:32",
-    sourceIcon: MessageSquare,
-    sourceColor: "#25D366",
-    targetStage: "01 CAPTURE",
-    targetAction: "Auto-Ingest Webhook",
-    targetOutput: "ORDER #8921 • 50 Units • ₹225,000",
-    targetMeta: "Parsed & Confirmed",
-    scatteredX: -140,
-    scatteredY: -50,
-    scatteredRotate: -8,
+    channel: "WhatsApp",
+    icon: MessageSquare,
+    badge: "Chat Message",
+    source: "+91 98765 43210 (Rajesh)",
+    content: "Need 50x Widget Pro by Friday. COD to Bangalore warehouse. Urgent!",
+    time: "14:32",
+    unifiedRow: {
+      type: "Sales Order",
+      docRef: "SO-2024-8921",
+      customer: "Rajesh Enterprises",
+      value: "₹2,25,000",
+      status: "Verified",
+    },
   },
   {
-    id: "invoice",
-    source: "Supplier PDF",
-    sourceType: "Scanned Invoice",
-    sourceContent: "📄 Acme Supplies INV-2024-8921. Total ₹71,980. PO Ref: PO-0456.",
-    sourceMeta: "Multi-page OCR • 14:30",
-    sourceIcon: FileText,
-    sourceColor: "#EF4444",
-    targetStage: "02 UNDERSTAND",
-    targetAction: "Layout-Aware OCR",
-    targetOutput: "3-Way Match Passed • Line Items Extracted",
-    targetMeta: "GST Validated",
-    scatteredX: -50,
-    scatteredY: 70,
-    scatteredRotate: 6,
+    id: "pdf",
+    channel: "Supplier PDF",
+    icon: FileText,
+    badge: "Scanned Invoice",
+    source: "billing@acmesupplies.com",
+    content: "Acme Supplies INV-2024-8921. Total ₹2,25,000. PO Ref: PO-0456. 12 Items.",
+    time: "14:30",
+    unifiedRow: {
+      type: "Tax Invoice",
+      docRef: "INV-2024-8921",
+      customer: "Acme Industrial",
+      value: "₹2,25,000",
+      status: "3-Way Match",
+    },
   },
   {
-    id: "spreadsheet",
-    source: "Inventory Sheet",
-    sourceType: "Raw XLSX Dump",
-    sourceContent: "📊 SKU: WP-100 | QTY: 12 | REORDER: 20 | Stock Alert Triggered",
-    sourceMeta: "Manual sheet • 14:28",
-    sourceIcon: Table,
-    sourceColor: "#10B981",
-    targetStage: "03 VALIDATE",
-    targetAction: "Rules Validation",
-    targetOutput: "Inventory Synced • PO Dispatched",
-    targetMeta: "Real-time Update",
-    scatteredX: 60,
-    scatteredY: -65,
-    scatteredRotate: -5,
+    id: "excel",
+    channel: "Inventory Sheet",
+    icon: Table,
+    badge: "Manual XLSX",
+    source: "Warehouse_Ops_v3_final.xlsx",
+    content: "SKU: WP-100 | Reserved: 50 | In Stock: 420 | Warehouse: BLR-01",
+    time: "14:28",
+    unifiedRow: {
+      type: "Stock Allocation",
+      docRef: "STK-BLR-019",
+      customer: "Central Warehouse",
+      value: "50 Units",
+      status: "Reserved",
+    },
   },
   {
     id: "payment",
-    source: "UPI Receipt",
-    sourceType: "Bank Screenshot",
-    sourceContent: "💳 UPI Ref: 4567891230. ₹71,480 received from Acme Corp.",
-    sourceMeta: "Bank statement API • 14:25",
-    sourceIcon: CreditCard,
-    sourceColor: "#6366F1",
-    targetStage: "04 AUTOMATE",
-    targetAction: "Auto-Reconcile",
-    targetOutput: "Journal Entry Created • Tally/SAP Synced",
-    targetMeta: "Audit Trail Logged",
-    scatteredX: 150,
-    scatteredY: 55,
-    scatteredRotate: 7,
+    channel: "UPI Bank Statement",
+    icon: CreditCard,
+    badge: "Bank Feed",
+    source: "HDFC Current A/C #8901",
+    content: "UPI Ref: 4567891230. ₹2,25,000 received. Remitter: Rajesh Ent.",
+    time: "14:25",
+    unifiedRow: {
+      type: "Payment Recon",
+      docRef: "UPI-4567891230",
+      customer: "HDFC NetBanking",
+      value: "₹2,25,000",
+      status: "Reconciled",
+    },
   },
 ];
 
 export function ChaosToControl() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [manualProgress, setManualProgress] = useState<number | null>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 24,
-    restDelta: 0.001,
-  });
-
-  useEffect(() => {
-    const unsubscribe = smoothProgress.on("change", (latest) => {
-      // Map the middle 50% of the section to 0 -> 1 progress
-      const mapped = Math.max(0, Math.min(1, (latest - 0.25) / 0.5));
-      setScrollProgress(mapped);
-    });
-    return () => unsubscribe();
-  }, [smoothProgress]);
-
-  // Use manual slider if interacted, otherwise scroll
-  const effectiveProgress = manualProgress !== null ? manualProgress : scrollProgress;
+  const [isUnified, setIsUnified] = useState(true);
 
   return (
-    <section
-      id="chaos-to-control"
-      ref={sectionRef}
-      className="relative section overflow-hidden py-24 lg:py-32"
-    >
-      {/* Background illumination */}
-      <div className="absolute inset-0 gradient-mesh" aria-hidden="true" />
-      <div className="absolute inset-0 grid-pattern" aria-hidden="true" />
-      <div className="absolute inset-0 noise-overlay" aria-hidden="true" />
-
-      <div className="relative container px-6 lg:px-12">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 lg:mb-16">
-          <ScrollReveal direction="fade">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-widest bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 mb-4">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Scroll or Scrub To Transform</span>
+    <section id="chaos-to-control" className="section relative border-t border-[rgba(255,255,255,0.06)]">
+      <div className="container px-6 lg:px-12">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 lg:mb-16 gap-6">
+          <div className="max-w-[620px]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-white/[0.04] text-[#9EA0A8] border border-[rgba(255,255,255,0.08)] mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#63E6BE]" />
+              <span>Transformation</span>
             </div>
-          </ScrollReveal>
-
-          <ScrollReveal direction="up" delay={0.1}>
-            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.08] text-text mb-4">
-              From <span className="text-rose-400">scattered chaos</span> to{" "}
-              <span className="text-gradient-slow">aligned control</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-4">
+              Disconnected streams become one organized workspace.
             </h2>
-          </ScrollReveal>
-
-          <ScrollReveal direction="up" delay={0.2}>
-            <p className="text-base sm:text-lg text-text-muted leading-relaxed max-w-2xl mx-auto">
-              Your company&apos;s data doesn&apos;t arrive in clean tables. Watch Cadence transform fragmented messages, scans, and spreadsheets into structured, audit-ready operational records.
+            <p className="text-base sm:text-lg text-[#9EA0A8] leading-relaxed">
+              Your business doesn&apos;t run on one tidy API. It runs across chat apps, PDFs, sheets, and bank portals. Cadence harmonizes them into a single coherent system of record.
             </p>
-          </ScrollReveal>
+          </div>
 
-          {/* Interactive Scrub Control */}
-          <div className="mt-8 flex flex-col items-center gap-2 max-w-md mx-auto">
-            <div className="w-full flex items-center justify-between text-xs font-mono text-text-subtle">
-              <span className={cn(effectiveProgress < 0.3 && "text-rose-400 font-semibold")}>
-                01 Scattered
-              </span>
-              <span className={cn(effectiveProgress >= 0.3 && effectiveProgress < 0.7 && "text-amber-400 font-semibold")}>
-                02 Connecting
-              </span>
-              <span className={cn(effectiveProgress >= 0.7 && "text-emerald-400 font-semibold")}>
-                03 Locked & Structured
-              </span>
-            </div>
-
-            <div className="relative w-full h-2 rounded-full bg-surface-elevated border border-border overflow-hidden">
-              <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-400"
-                style={{ width: `${effectiveProgress * 100}%` }}
-              />
-            </div>
-
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={effectiveProgress}
-              onChange={(e) => setManualProgress(parseFloat(e.target.value))}
-              className="w-full opacity-0 absolute cursor-pointer h-6"
-              aria-label="Scrub transformation progress"
-            />
+          {/* Interactive Toggle Control */}
+          <div className="flex items-center bg-[#0C0D0F] border border-[rgba(255,255,255,0.08)] p-1 rounded-lg self-start md:self-auto">
+            <button
+              onClick={() => setIsUnified(false)}
+              className={cn(
+                "px-3.5 py-1.5 text-xs font-medium rounded-md transition-colors",
+                !isUnified
+                  ? "bg-[#141619] text-white shadow"
+                  : "text-[#9EA0A8] hover:text-white"
+              )}
+            >
+              Raw Inputs
+            </button>
+            <button
+              onClick={() => setIsUnified(true)}
+              className={cn(
+                "px-3.5 py-1.5 text-xs font-medium rounded-md transition-colors",
+                isUnified
+                  ? "bg-[#141619] text-[#63E6BE] shadow"
+                  : "text-[#9EA0A8] hover:text-white"
+              )}
+            >
+              Organized Workspace
+            </button>
           </div>
         </div>
 
-        {/* Dynamic Canvas Container */}
-        <div className="relative min-h-[580px] lg:min-h-[500px] w-full max-w-5xl mx-auto rounded-2xl bg-surface/70 border border-border/70 p-6 lg:p-8 backdrop-blur-xl overflow-hidden shadow-elevation-4">
-          {/* SVG Connection Lines dynamically drawn based on progress */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none -z-0"
-            preserveAspectRatio="none"
-            viewBox="0 0 800 450"
-          >
-            <defs>
-              <linearGradient id="chaosToControlLine" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#EF4444" stopOpacity="0.4" />
-                <stop offset="50%" stopColor="#F59E0B" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#10B981" stopOpacity="0.9" />
-              </linearGradient>
-            </defs>
-
-            {/* Connecting Conduits that manifest as cards align */}
-            {workflowPairs.map((pair, index) => {
-              const startY = 80 + index * 90;
-              const endY = 80 + index * 90;
-              const pathOpacity = Math.max(0, Math.min(1, (effectiveProgress - 0.2) / 0.5));
-
-              return (
-                <g key={`conduit-${pair.id}`}>
-                  {/* Faint baseline conduit */}
-                  <path
-                    d={`M 150 ${startY} C 350 ${startY}, 450 ${endY}, 650 ${endY}`}
-                    fill="none"
-                    stroke="rgba(255, 255, 255, 0.04)"
-                    strokeWidth="1.5"
-                  />
-                  {/* Dynamic luminous path */}
-                  <motion.path
-                    d={`M 150 ${startY} C 350 ${startY}, 450 ${endY}, 650 ${endY}`}
-                    fill="none"
-                    stroke="url(#chaosToControlLine)"
-                    strokeWidth={effectiveProgress > 0.7 ? "2" : "1"}
-                    strokeDasharray="6 8"
-                    strokeDashoffset={-effectiveProgress * 60}
-                    style={{
-                      opacity: pathOpacity,
-                    }}
-                  />
-                </g>
-              );
-            })}
-          </svg>
-
-          {/* Cards Layout: Transforms smoothly from scattered into aligned grid */}
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch h-full">
-            {workflowPairs.map((pair, index) => {
-              // Interpolate translation, rotation, and interior contrast
-              const curX = pair.scatteredX * (1 - effectiveProgress);
-              const curY = pair.scatteredY * (1 - effectiveProgress);
-              const curRotate = pair.scatteredRotate * (1 - effectiveProgress);
-              const isAligned = effectiveProgress > 0.75;
-
-              return (
-                <motion.div
-                  key={pair.id}
-                  style={{
-                    transform: `translate3d(${curX}px, ${curY}px, 0) rotate(${curRotate}deg)`,
-                    transition: "transform 0.1s ease-out",
-                  }}
-                  className={cn(
-                    "flex flex-col justify-between rounded-xl p-5 border transition-all duration-300",
-                    isAligned
-                      ? "bg-surface-elevated/95 border-emerald-500/40 shadow-elevation-2"
-                      : "bg-surface/90 border-border/80 shadow-elevation-1"
-                  )}
+        {/* Transition Canvas */}
+        <div className="relative rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0C0D0F] overflow-hidden p-6 sm:p-8 min-h-[420px] flex items-center justify-center">
+          
+          {/* State 1: Scattered Raw Inputs */}
+          {!isUnified ? (
+            <motion.div
+              key="raw"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              {rawInputs.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-5 rounded-lg bg-[#141619] border border-[rgba(255,255,255,0.06)] flex flex-col justify-between"
                 >
-                  {/* Top Bar */}
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <div
-                        className="flex items-center justify-center w-8 h-8 rounded-lg"
-                        style={{
-                          background: `${pair.sourceColor}18`,
-                          border: `1px solid ${pair.sourceColor}30`,
-                          color: pair.sourceColor,
-                        }}
-                      >
-                        <pair.sourceIcon className="w-4 h-4" />
+                      <div className="flex items-center gap-2">
+                        <item.icon className="w-4 h-4 text-[#9EA0A8]" />
+                        <span className="text-xs font-semibold text-white">{item.channel}</span>
                       </div>
-
-                      <span
-                        className={cn(
-                          "text-[10px] font-mono px-2 py-0.5 rounded-full uppercase tracking-wider",
-                          isAligned
-                            ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                            : "bg-surface text-text-subtle border border-border"
-                        )}
-                      >
-                        {isAligned ? "Structured" : pair.sourceType}
-                      </span>
+                      <span className="text-[11px] font-mono text-[#60636C]">{item.time}</span>
                     </div>
-
-                    <h3 className="font-heading font-semibold text-sm text-text mb-2">
-                      {isAligned ? pair.targetStage : pair.source}
-                    </h3>
-
-                    <div
-                      className={cn(
-                        "p-3 rounded-lg text-xs font-mono mb-3 leading-relaxed transition-colors",
-                        isAligned
-                          ? "bg-black/50 text-emerald-300 border border-emerald-500/20"
-                          : "bg-black/30 text-text-muted border border-border/50"
-                      )}
-                    >
-                      {isAligned ? pair.targetOutput : pair.sourceContent}
+                    <div className="text-[11px] font-mono text-[#9EA0A8] mb-2">{item.source}</div>
+                    <div className="p-2.5 rounded bg-[#050607] border border-[rgba(255,255,255,0.04)] text-xs text-white/90 font-mono">
+                      &quot;{item.content}&quot;
                     </div>
                   </div>
-
-                  {/* Bottom Resolution Bar */}
-                  <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs font-mono">
-                    <span className="text-[11px] text-text-subtle">
-                      {isAligned ? pair.targetMeta : pair.sourceMeta}
-                    </span>
-
-                    {isAligned ? (
-                      <div className="flex items-center gap-1 text-emerald-400">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span className="text-[11px] font-medium">Synced</span>
-                      </div>
-                    ) : (
-                      <span className="text-[11px] text-rose-400">Pending</span>
-                    )}
+                  <div className="mt-4 pt-3 border-t border-[rgba(255,255,255,0.04)] flex items-center justify-between text-[11px] text-[#60636C]">
+                    <span>Unstructured payload</span>
+                    <span className="text-amber-400/80">Pending ingestion</span>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
+                </div>
+              ))}
+            </motion.div>
+          ) : (
+            /* State 2: One Organized Workspace (Mercury / Notion Database style) */
+            <motion.div
+              key="unified"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full font-body"
+            >
+              {/* Workspace Header Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-[rgba(255,255,255,0.06)] gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-semibold text-white">Order Pipeline #ORD-8921</span>
+                  <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-[#63E6BE]/10 text-[#63E6BE] border border-[#63E6BE]/20">
+                    Fully Synchronized
+                  </span>
+                </div>
+                <div className="text-xs text-[#9EA0A8] font-mono">
+                  4 Source Documents Resolved • Tally Prime Linked
+                </div>
+              </div>
 
-          {/* Bottom Payoff Banner */}
-          <motion.div
-            className="mt-8 p-4 rounded-xl text-center border transition-all"
-            style={{
-              background:
-                effectiveProgress > 0.7
-                  ? "linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(56, 189, 248, 0.08))"
-                  : "rgba(255, 255, 255, 0.02)",
-              borderColor:
-                effectiveProgress > 0.7 ? "rgba(16, 185, 129, 0.3)" : "var(--color-border)",
-            }}
-          >
-            <p className="font-heading font-semibold text-sm sm:text-base text-text">
-              {effectiveProgress > 0.7 ? (
-                <span className="text-emerald-400 flex items-center justify-center gap-2">
-                  <ShieldCheck className="w-4 h-4" />
-                  All 4 streams verified, linked, and posted to your ledger
-                </span>
-              ) : (
-                "Unstructured inputs create silent operational bottlenecks"
-              )}
-            </p>
-            <p className="text-xs text-text-muted mt-1 font-mono">
-              {effectiveProgress > 0.7
-                ? "Zero manual transcription • Instant 3-way validation • Complete contextual audit trail"
-                : "Scroll down to see the end-to-end processing pipeline"}
-            </p>
-          </motion.div>
+              {/* Workspace Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="text-[#60636C] uppercase font-mono text-[10px] tracking-wider border-b border-[rgba(255,255,255,0.04)]">
+                      <th className="pb-3 font-medium">Source / Stream</th>
+                      <th className="pb-3 font-medium">Document Ref</th>
+                      <th className="pb-3 font-medium">Entity</th>
+                      <th className="pb-3 font-medium">Amount / Qty</th>
+                      <th className="pb-3 font-medium text-right">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[rgba(255,255,255,0.04)]">
+                    {rawInputs.map((item) => (
+                      <tr key={item.id} className="hover:bg-white/[0.02] transition-colors">
+                        <td className="py-3.5 font-medium text-white flex items-center gap-2">
+                          <item.icon className="w-3.5 h-3.5 text-[#9EA0A8]" />
+                          <span>{item.channel}</span>
+                        </td>
+                        <td className="py-3.5 font-mono text-[#9EA0A8]">{item.unifiedRow.docRef}</td>
+                        <td className="py-3.5 text-[#9EA0A8]">{item.unifiedRow.customer}</td>
+                        <td className="py-3.5 font-mono text-white">{item.unifiedRow.value}</td>
+                        <td className="py-3.5 text-right">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-white/[0.04] text-[#63E6BE] font-mono text-[11px]">
+                            <Check className="w-3 h-3" />
+                            {item.unifiedRow.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Workspace Summary Bar */}
+              <div className="mt-6 pt-4 border-t border-[rgba(255,255,255,0.06)] flex flex-col sm:flex-row items-center justify-between text-xs text-[#9EA0A8] gap-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#63E6BE]" />
+                  <span>General Ledger voucher created with 100% matched reconciliation trail.</span>
+                </div>
+                <span className="font-mono text-[11px] text-[#60636C]">Zero manual data entry</span>
+              </div>
+            </motion.div>
+          )}
+
         </div>
+
       </div>
     </section>
   );
