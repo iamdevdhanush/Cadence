@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useState, type MouseEvent, type ButtonHTMLAttributes } from 'react'
+import { useRef, useEffect, useState, type ButtonHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 
@@ -27,23 +27,23 @@ export function MagneticButton({
     const element = ref.current
     if (!element) return
 
-    const handleMouseMove = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleMouseMove = (e: MouseEvent) => {
       const rect = element.getBoundingClientRect()
       const x = e.clientX - rect.left - rect.width / 2
       const y = e.clientY - rect.top - rect.height / 2
       setPosition({ x: x * strength, y: y * strength })
-      onMouseMove?.(e)
+      onMouseMove?.(e as unknown as React.MouseEvent<HTMLButtonElement>)
     }
 
-    const handleMouseLeave = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleMouseLeave = (e: MouseEvent) => {
       setPosition({ x: 0, y: 0 })
       setIsHovering(false)
-      onMouseLeave?.(e)
+      onMouseLeave?.(e as unknown as React.MouseEvent<HTMLButtonElement>)
     }
 
-    const handleMouseEnter = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleMouseEnter = (e: MouseEvent) => {
       setIsHovering(true)
-      onMouseEnter?.(e)
+      onMouseEnter?.(e as unknown as React.MouseEvent<HTMLButtonElement>)
     }
 
     element.addEventListener('mousemove', handleMouseMove)
@@ -64,7 +64,7 @@ export function MagneticButton({
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
         transition: isHovering ? 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-      } as React.CSSProperties}
+      } as React.CSSProperties)
       {...props}
     >
       {children}

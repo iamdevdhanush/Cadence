@@ -81,12 +81,13 @@ export function ConnectionLines({
       ([entry]) => {
         if (entry.isIntersecting) {
           paths.forEach((path, index) => {
+            const svgPath = path as SVGPathElement
             const id = `path-${index}`
             const length = lengths[id]
             if (length) {
               setTimeout(() => {
-                ;(path as SVGPathElement).style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                ;(path as SVGPathElement).style.strokeDashoffset = '0'
+                svgPath.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                svgPath.style.strokeDashoffset = '0'
               }, index * 150)
             }
           })
@@ -154,8 +155,9 @@ export function ConnectionLines({
   }
 
   return (
-    <div className={cn('relative', className)} style={{ width: '100%', height: '100%', maxWidth: '600px' }}>
-      <svg
+    <>
+      <div className={cn('relative', className)} style={{ width: '100%', height: '100%', maxWidth: '600px' }}>
+        <svg
         ref={svgRef}
         viewBox={`0 0 ${width} ${height}`}
         preserveAspectRatio="xMidYMid meet"
@@ -205,7 +207,6 @@ export function ConnectionLines({
 
         {nodes.map((node) => {
           const isCore = node.type === 'core'
-          const pulseKey = `pulse-${node.id}`
 
           return (
             <g key={node.id} filter={isCore ? 'url(#glow)' : 'none'}>
@@ -229,9 +230,7 @@ export function ConnectionLines({
                   stroke="#63F0C8"
                   strokeWidth="1"
                   strokeOpacity={0.3}
-                  style={{
-                    animation: `${pulseKey} 3s ease-in-out infinite`,
-                  } as React.CSSProperties>
+                  style={{ animation: 'pulse-core 3s ease-in-out infinite' } as React.CSSProperties}>
                   <animate
                     attributeName="r"
                     values="22;28;22"
@@ -263,13 +262,13 @@ export function ConnectionLines({
           )
         })}
       </svg>
-
-      <style jsx>{`
-        @keyframes pulse-${nodes.find(n => n.type === 'core')?.id || 'core'} {
-          0%, 100% { r: 22; stroke-opacity: 0.3; }
-          50% { r: 28; stroke-opacity: 0.1; }
-        }
-      `}</style>
-    </div>
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes pulse-core {
+            0%, 100% { r: 22; stroke-opacity: 0.3; }
+            50% { r: 28; stroke-opacity: 0.1; }
+          }
+        ` }} />
+      </div>
+    </>
   )
 }
