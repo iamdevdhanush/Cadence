@@ -1,7 +1,6 @@
 'use client'
 
 import { ScrollReveal, StaggerContainer } from '@/components/motion/ScrollReveal'
-import { MagneticButton } from '@/components/motion/MagneticButton'
 import { NodeFlow } from '@/components/motion/NodeFlow'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
