@@ -41,9 +41,9 @@ export function Hero() {
               </ScrollReveal>
               <ScrollReveal delay={400}>
                 <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                  <MagneticButton asChild size="lg">
+                  <Button size="lg" asChild>
                     <Link href="#contact">Book Free Strategy Call</Link>
-                  </MagneticButton>
+                  </Button>
                   <Button variant="secondary" size="lg" asChild>
                     <Link href="#work">See Our Work</Link>
                   </Button>
