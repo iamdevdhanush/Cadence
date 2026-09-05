@@ -67,11 +67,12 @@ export function ConnectionLines({
     const lengths: Record<string, number> = {}
 
     paths.forEach((path, index) => {
-      const length = path.getTotalLength()
+      const svgPath = path as SVGPathElement
+      const length = svgPath.getTotalLength()
       const id = `path-${index}`
       lengths[id] = length
-      ;(path as SVGPathElement).style.strokeDasharray = `${length}`
-      ;(path as SVGPathElement).style.strokeDashoffset = `${length}`
+      svgPath.style.strokeDasharray = `${length}`
+      svgPath.style.strokeDashoffset = `${length}`
     })
 
     setPathLengths(lengths)
