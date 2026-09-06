@@ -1,7 +1,7 @@
 'use client'
 
 import { ScrollReveal, StaggerContainer } from '@/components/motion/ScrollReveal'
-import { Card, CardContent } from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Badge } from '@/components/ui/Badge'
 
@@ -39,7 +39,7 @@ export function CaseStudies() {
   return (
     <section id="work" className="section" aria-labelledby="casestudies-heading">
       <div className="container">
-        <div className="max-w-3xl mx-auto text-center mb-16 lg:mb-24">
+        <div className="max-w-3xl mx-auto text-center mb-[48px]">
           <SectionHeading
             eyebrow="Case Studies"
             title="Pilot projects with real operators"
@@ -48,35 +48,35 @@ export function CaseStudies() {
           />
         </div>
 
-        <StaggerContainer baseDelay={100} staggerDelay={100} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <StaggerContainer baseDelay={100} staggerDelay={100} className="grid md:grid-cols-2 lg:grid-cols-3 gap-[24px] lg:gap-[24px]">
           {caseStudies.map((study, index) => (
             <ScrollReveal key={study.id} delay={index * 100}>
               <Card variant="interactive" padding="lg" className="h-full flex flex-col">
                 <div className="flex items-center justify-between mb-6">
-                  <Badge variant={study.pilot ? 'accent' : 'default'} size="sm">
+                  <Badge variant={study.pilot ? 'accent' : 'muted'} size="sm">
                     {study.pilot ? 'Pilot Project' : 'Client'}
                   </Badge>
-                  <span className="text-body-sm text-muted/50">{study.type}</span>
+                  <span className="text-body-sm text-text-light">{study.type}</span>
                 </div>
 
                 <div className="space-y-6 mb-6 flex-1">
                   <div>
-                    <h4 className="text-xs font-medium tracking-wider uppercase text-muted/50 mb-2">Problem</h4>
-                    <p className="text-body-sm text-muted/80">{study.problem}</p>
+                    <h4 className="text-caption font-medium tracking-wider uppercase text-text-light mb-2">Problem</h4>
+                    <p className="text-body-sm text-text-muted">{study.problem}</p>
                   </div>
                   <div>
-                    <h4 className="text-xs font-medium tracking-wider uppercase text-muted/50 mb-2">Solution</h4>
-                    <p className="text-body-sm text-text/90">{study.solution}</p>
+                    <h4 className="text-caption font-medium tracking-wider uppercase text-text-light mb-2">Solution</h4>
+                    <p className="text-body-sm text-text">{study.solution}</p>
                   </div>
                   <div>
-                    <h4 className="text-xs font-medium tracking-wider uppercase text-muted/50 mb-2">Outcome</h4>
-                    <p className="text-body-sm text-text">{study.outcome}</p>
+                    <h4 className="text-caption font-medium tracking-wider uppercase text-text-light mb-2">Outcome</h4>
+                    <p className="text-body-sm text-text font-medium">{study.outcome}</p>
                   </div>
                 </div>
 
                 <div className="pt-6 border-t border-border flex flex-wrap gap-2">
                   {study.metrics.map((metric, i) => (
-                    <Badge key={i} variant="outline" size="sm" className="text-xs">
+                    <Badge key={i} variant="muted" size="sm" className="text-caption">
                       {metric}
                     </Badge>
                   ))}
@@ -87,7 +87,7 @@ export function CaseStudies() {
         </StaggerContainer>
 
         <div className="mt-16 text-center">
-          <p className="text-body text-muted/60 max-w-2xl mx-auto">
+          <p className="text-body text-text-muted max-w-2xl mx-auto">
             These are pilot engagements—early partnerships where we proved the model. We're selective about who we work with because we stay involved long after deployment.
           </p>
         </div>

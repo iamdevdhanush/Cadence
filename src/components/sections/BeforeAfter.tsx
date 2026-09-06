@@ -46,7 +46,7 @@ export function BeforeAfter() {
   return (
     <section id="before-after" className="section" aria-labelledby="beforeafter-heading">
       <div className="container">
-        <div className="max-w-3xl mx-auto text-center mb-16 lg:mb-24">
+        <div className="max-w-3xl mx-auto text-center mb-[48px]">
           <SectionHeading
             eyebrow="Before vs After"
             title="What changes when you automate"
@@ -58,7 +58,7 @@ export function BeforeAfter() {
         <div className="relative">
           <div
             className={cn(
-              'grid lg:grid-cols-2 gap-8 lg:gap-16 items-start',
+              'grid lg:grid-cols-2 gap-[24px] lg:gap-[32px] items-start',
               isAnimating && 'opacity-50 pointer-events-none'
             )}
             style={{ transition: 'opacity 0.3s ease' }}
@@ -67,17 +67,17 @@ export function BeforeAfter() {
             aria-label="Before and after comparison"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-surface/50 rounded-card border border-border/50 p-8" aria-hidden="true" />
-              <div className="relative p-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-pill text-sm font-medium mb-6">
-                  <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" aria-hidden="true" />
+              <div className="rounded-card border border-red-border bg-red-soft p-6" aria-hidden="true" />
+              <div className="relative p-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 rounded-pill text-sm font-medium mb-6">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" aria-hidden="true" />
                   BEFORE
                 </div>
                 <h3 className="text-2xl font-semibold text-text mb-6">{comparisons[activeIndex].category}</h3>
                 <ul className="space-y-4" role="list">
                   {comparisons[activeIndex].before.map((item, i) => (
-                    <li key={i} className="flex items-start gap-4 text-body text-muted/80">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true">
+                    <li key={i} className="flex items-start gap-4 text-body text-text-muted">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-500 flex-shrink-0 mt-0.5" aria-hidden="true">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
                       </svg>
@@ -89,16 +89,16 @@ export function BeforeAfter() {
             </div>
 
             <div className="relative">
-              <div className="absolute inset-0 bg-accent/5 rounded-card border border-accent/10 p-8" aria-hidden="true" />
-              <div className="relative p-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-pill text-sm font-medium mb-6">
+              <div className="rounded-card border border-accent/20 bg-accent-soft p-6" aria-hidden="true" />
+              <div className="relative p-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent-soft text-accent rounded-pill text-sm font-medium mb-6">
                   <span className="w-2 h-2 rounded-full bg-accent animate-pulse" aria-hidden="true" />
                   AFTER
                 </div>
                 <h3 className="text-2xl font-semibold text-text mb-6">{comparisons[activeIndex].category}</h3>
                 <ul className="space-y-4" role="list">
                   {comparisons[activeIndex].after.map((item, i) => (
-                    <li key={i} className="flex items-start gap-4 text-body text-text/90">
+                    <li key={i} className="flex items-start gap-4 text-body text-text">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent flex-shrink-0 mt-0.5" aria-hidden="true">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
@@ -110,7 +110,7 @@ export function BeforeAfter() {
             </div>
           </div>
 
-          <div className="mt-12 flex items-center justify-center gap-4" role="tablist" aria-label="Comparison categories">
+          <div className="mt-12 flex items-center justify-center gap-3" role="tablist" aria-label="Comparison categories">
             {comparisons.map((_, index) => (
               <button
                 key={index}
@@ -122,10 +122,10 @@ export function BeforeAfter() {
                   }, 300)
                 }}
                 className={cn(
-                  'w-3 h-3 rounded-full transition-all duration-medium',
+                  'w-2.5 h-2.5 rounded-full transition-all duration-medium',
                   index === activeIndex
-                    ? 'bg-accent w-8'
-                    : 'bg-white/10 hover:bg-white/20'
+                    ? 'bg-accent w-10'
+                    : 'bg-text-light hover:bg-text-muted'
                 )}
                 role="tab"
                 aria-selected={index === activeIndex}

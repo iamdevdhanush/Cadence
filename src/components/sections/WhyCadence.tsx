@@ -1,7 +1,7 @@
 'use client'
 
 import { ScrollReveal, StaggerContainer } from '@/components/motion/ScrollReveal'
-import { Card, CardContent } from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
 const principles = [
@@ -45,9 +45,9 @@ const principles = [
 
 export function WhyCadence() {
   return (
-    <section id="about" className="section bg-surface/30" aria-labelledby="why-heading">
+    <section id="about" className="section bg-surface-alt/50" aria-labelledby="why-heading">
       <div className="container">
-        <div className="max-w-3xl mx-auto text-center mb-16 lg:mb-24">
+        <div className="max-w-3xl mx-auto text-center mb-[48px]">
           <SectionHeading
             eyebrow="Why Cadence"
             title="Three principles that guide every engagement"
@@ -56,15 +56,15 @@ export function WhyCadence() {
           />
         </div>
 
-        <StaggerContainer baseDelay={100} staggerDelay={100} className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <StaggerContainer baseDelay={100} staggerDelay={100} className="grid md:grid-cols-3 gap-[24px]">
           {principles.map((principle, index) => (
             <ScrollReveal key={principle.id} delay={index * 100}>
               <Card variant="default" padding="lg" className="h-full">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center text-accent mb-6">
+                <div className="w-14 h-14 rounded-xl bg-accent-soft flex items-center justify-center text-accent mb-6">
                   {principle.icon}
                 </div>
-                <h3 className="text-xl font-semibold tracking-tight text-text mb-3">{principle.title}</h3>
-                <p className="text-body-sm text-muted/70">{principle.description}</p>
+                <h3 className="text-card-title font-semibold tracking-tight text-text mb-4">{principle.title}</h3>
+                <p className="text-body-sm text-text-muted">{principle.description}</p>
               </Card>
             </ScrollReveal>
           ))}
