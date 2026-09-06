@@ -27,8 +27,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 h-[72px] transition-all duration-medium',
-        scrolled && 'bg-background/80 backdrop-blur-md border-b border-border'
+        'fixed top-0 left-0 right-0 z-50 h-[80px] transition-all duration-medium',
+        scrolled
+          ? 'bg-surface/80 backdrop-blur-md border-b border-border shadow-nav'
+          : 'bg-transparent'
       )}
       role="banner"
     >
@@ -37,16 +39,17 @@ export function Navbar() {
           href="/"
           className="text-2xl font-bold tracking-tight text-text flex items-center gap-2"
           aria-label="Cadence - Home"
+          style={{ letterSpacing: '-0.03em' }}
         >
-          <span style={{ letterSpacing: '-0.05em' }}>CADENCE</span>
+          <span>CADENCE</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation">
+        <nav className="hidden md:flex items-center gap-10" role="navigation" aria-label="Main navigation">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-body-sm font-medium text-muted/80 hover:text-text transition-colors duration-fast relative"
+              className="text-body-sm font-medium text-text-muted hover:text-text transition-colors duration-fast relative"
             >
               {item.label}
             </Link>
@@ -54,7 +57,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="md" asChild>
             <Link href="/#contact">Book Audit</Link>
           </Button>
           <Button size="md" asChild>
@@ -63,7 +66,7 @@ export function Navbar() {
         </div>
 
         <button
-          className="md:hidden p-2 text-text hover:text-accent transition-colors"
+          className="md:hidden p-2 text-text-muted hover:text-text transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-expanded={mobileMenuOpen}
           aria-controls="mobile-menu"
@@ -87,13 +90,13 @@ export function Navbar() {
       </div>
 
       {mobileMenuOpen && (
-        <div id="mobile-menu" className="md:hidden py-6 border-t border-border animate-in">
+        <div id="mobile-menu" className="md:hidden py-6 border-t border-border animate-in bg-surface">
           <nav className="flex flex-col gap-4" role="navigation" aria-label="Mobile navigation">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-body font-medium text-muted/80 hover:text-text transition-colors duration-fast px-2 py-2"
+                className="text-body font-medium text-text-muted hover:text-text transition-colors duration-fast px-2 py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
