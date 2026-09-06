@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactElement, Children, isValidElement, cloneElement } from 'react'
 import { cn } from '@/lib/utils'
 
 interface ScrollRevealProps {
@@ -73,12 +73,12 @@ export function StaggerContainer({
   baseDelay = 0,
   staggerDelay = 100,
 }: StaggerContainerProps) {
-  const childArray = React.Children.toArray(children)
+  const childArray = Children.toArray(children)
   return (
     <div className={cn('flex flex-col', className)}>
       {childArray.map((child, index) => {
-        if (!React.isValidElement(child)) return child
-        return React.cloneElement(child as React.ReactElement, {
+        if (!isValidElement(child)) return child
+        return cloneElement(child as ReactElement, {
           delay: baseDelay + index * staggerDelay,
         } as ScrollRevealProps)
       })}
