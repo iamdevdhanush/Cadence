@@ -15,14 +15,14 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     const variants = {
       default: '',
       elevated: 'shadow-elevated',
-      interactive: 'hover:border-white/15 hover:shadow-elevated cursor-pointer',
+      interactive: 'hover:border-border-strong hover:shadow-elevated hover:-translate-y-1 cursor-pointer',
     }
 
     const paddings = {
       none: '',
       sm: 'p-4',
-      md: 'p-8',
-      lg: 'p-12',
+      md: 'p-6',
+      lg: 'p-8',
     }
 
     return (
@@ -51,7 +51,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadi
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('text-2xl font-semibold tracking-tight text-text', className)}
+      className={cn('text-card-title font-semibold tracking-tight text-text', className)}
       {...props}
     />
   )
@@ -61,7 +61,7 @@ CardTitle.displayName = 'CardTitle'
 
 export const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn('mt-2 text-body text-muted/70', className)} {...props} />
+    <p ref={ref} className={cn('mt-2 text-body text-text-muted', className)} {...props} />
   )
 )
 

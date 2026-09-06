@@ -22,11 +22,11 @@ const nodeData: FlowNode[] = [
   { id: 'email', label: 'Email', position: { x: 50, y: 200 }, type: 'input', color: '#EA4335' },
   { id: 'pdf', label: 'PDF', position: { x: 50, y: 300 }, type: 'input', color: '#FF6B00' },
   { id: 'sheets', label: 'Sheets', position: { x: 50, y: 400 }, type: 'input', color: '#34A853' },
-  { id: 'cadence', label: 'CADENCE', position: { x: 400, y: 250 }, type: 'process', color: '#63F0C8' },
-  { id: 'crm', label: 'CRM', position: { x: 750, y: 100 }, type: 'output', color: '#63F0C8' },
-  { id: 'erp', label: 'ERP', position: { x: 750, y: 200 }, type: 'output', color: '#63F0C8' },
-  { id: 'reports', label: 'Reports', position: { x: 750, y: 300 }, type: 'output', color: '#63F0C8' },
-  { id: 'notifications', label: 'Notifications', position: { x: 750, y: 400 }, type: 'output', color: '#63F0C8' },
+  { id: 'cadence', label: 'CADENCE', position: { x: 400, y: 250 }, type: 'process', color: '#18C7A1' },
+  { id: 'crm', label: 'CRM', position: { x: 750, y: 100 }, type: 'output', color: '#18C7A1' },
+  { id: 'erp', label: 'ERP', position: { x: 750, y: 200 }, type: 'output', color: '#18C7A1' },
+  { id: 'reports', label: 'Reports', position: { x: 750, y: 300 }, type: 'output', color: '#18C7A1' },
+  { id: 'notifications', label: 'Notifications', position: { x: 750, y: 400 }, type: 'output', color: '#18C7A1' },
 ]
 
 const connections: FlowConnection[] = [
@@ -133,9 +133,9 @@ export function NodeFlow({ className, width = 800, height = 500 }: NodeFlowProps
       <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet" className="w-full h-full" aria-hidden="true">
         <defs>
           <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#63F0C8" stopOpacity="0.3" />
-            <stop offset="50%" stopColor="#63F0C8" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#63F0C8" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#18C7A1" stopOpacity="0.3" />
+            <stop offset="50%" stopColor="#18C7A1" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#18C7A1" stopOpacity="0.3" />
           </linearGradient>
           <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -173,7 +173,7 @@ export function NodeFlow({ className, width = 800, height = 500 }: NodeFlowProps
                 cx={point.x}
                 cy={point.y}
                 r={4}
-                fill="#63F0C8"
+                fill="#18C7A1"
                 filter="url(#nodeGlow)"
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -196,8 +196,8 @@ export function NodeFlow({ className, width = 800, height = 500 }: NodeFlowProps
               cx={node.position.x}
               cy={node.position.y}
               r={node.type === 'process' ? 30 : 20}
-              fill={node.type === 'process' ? 'rgba(99, 240, 200, 0.1)' : `rgba(${parseInt(node.color.slice(1, 3), 16)}, ${parseInt(node.color.slice(3, 5), 16)}, ${parseInt(node.color.slice(5, 7), 16)}, 0.1)`}
-              stroke={node.type === 'process' ? '#63F0C8' : node.color}
+              fill={node.type === 'process' ? 'rgba(24, 199, 161, 0.1)' : `rgba(${parseInt(node.color.slice(1, 3), 16)}, ${parseInt(node.color.slice(3, 5), 16)}, ${parseInt(node.color.slice(5, 7), 16)}, 0.1)`}
+              stroke={node.type === 'process' ? '#18C7A1' : node.color}
               strokeWidth={node.type === 'process' ? 2 : 1.5}
               filter={node.type === 'process' ? 'url(#nodeGlow)' : 'none'}
             />
@@ -207,7 +207,7 @@ export function NodeFlow({ className, width = 800, height = 500 }: NodeFlowProps
                 cy={node.position.y}
                 r={34}
                 fill="none"
-                stroke="#63F0C8"
+                stroke="#18C7A1"
                 strokeWidth={1}
                 strokeOpacity={0.2}
                 animate={{ r: [34, 40, 34], strokeOpacity: [0.2, 0.05, 0.2] }}
@@ -219,7 +219,7 @@ export function NodeFlow({ className, width = 800, height = 500 }: NodeFlowProps
               y={node.position.y + 4}
               textAnchor="middle"
               dominantBaseline="middle"
-              fill={node.type === 'process' ? '#63F0C8' : '#F8F8F8'}
+              fill={node.type === 'process' ? '#18C7A1' : '#0F172A'}
               fontSize={node.type === 'process' ? 11 : 9}
               fontWeight={node.type === 'process' ? 600 : 500}
               fontFamily="Geist, system-ui, sans-serif"

@@ -22,7 +22,7 @@ export function SectionHeading({
   return (
     <div className={cn('max-w-text', maxWidth && 'max-w-text', className)} style={{ textAlign: align }}>
       {eyebrow && (
-        <span className="inline-block mb-4 px-3 py-1 text-xs font-medium tracking-widest uppercase text-accent bg-accent/10 rounded-pill">
+        <span className="inline-block mb-[20px] px-4 py-2 text-caption font-medium tracking-widest uppercase text-accent bg-accent-soft rounded-pill">
           {eyebrow}
         </span>
       )}
@@ -30,7 +30,7 @@ export function SectionHeading({
         {title}
       </h2>
       {description && (
-        <p className="mt-6 text-body-lg text-muted/90 max-w-text">
+        <p className="mt-[24px] text-body-lg text-text-muted max-w-text">
           {description}
         </p>
       )}

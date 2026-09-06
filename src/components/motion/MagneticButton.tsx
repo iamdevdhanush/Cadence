@@ -15,8 +15,8 @@ interface MagneticButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
 const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium transition-all duration-medium rounded-btn focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed magnetic-btn relative overflow-visible'
 
 const variants = {
-  primary: 'bg-accent text-background hover:bg-accent/90 hover:shadow-glow active:scale-[0.98]',
-  secondary: 'bg-transparent border border-border text-text hover:bg-surface hover:border-white/20 active:scale-[0.98]',
+  primary: 'bg-accent text-white hover:bg-accent-hover hover:shadow-glow active:scale-[0.98]',
+  secondary: 'bg-transparent border border-border text-text hover:bg-surface-alt hover:border-border-strong active:scale-[0.98]',
 }
 
 const sizes = {

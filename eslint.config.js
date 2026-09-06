@@ -17,4 +17,15 @@ export default [
   {
     ignores: ['.next/', 'node_modules/', 'out/'],
   },
+  {
+    files: ['*.config.js', '*.config.ts'],
+    languageOptions: {
+      globals: {
+        module: 'readonly',
+        require: 'readonly',
+        process: 'readonly',
+        __dirname: 'readonly',
+      },
+    },
+  },
 ]
