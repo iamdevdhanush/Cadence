@@ -47,7 +47,7 @@ export function FAQ() {
   return (
     <section id="faq" className="section" aria-labelledby="faq-heading">
       <div className="container">
-        <div className="max-w-3xl mx-auto text-center mb-16 lg:mb-24">
+        <div className="max-w-3xl mx-auto text-center mb-[48px]">
           <SectionHeading
             eyebrow="FAQ"
             title="Questions we hear before every engagement"
@@ -60,7 +60,11 @@ export function FAQ() {
           {faqs.map((faq, index) => (
             <ScrollReveal key={index} delay={index * 50}>
               <details
-                className="group bg-surface border border-border rounded-card overflow-hidden transition-all duration-medium hover:border-white/15"
+                className={cn(
+                  'group bg-surface border border-border rounded-card overflow-hidden transition-all duration-medium',
+                  'hover:border-border-strong',
+                  openIndex === index && 'bg-surface-alt'
+                )}
                 open={openIndex === index}
                 onToggle={() => setOpenIndex(openIndex === index ? null : index)}
               >
@@ -68,14 +72,14 @@ export function FAQ() {
                   <h3 className="text-body-lg font-medium text-text pr-10">{faq.question}</h3>
                   <ChevronDown
                     className={cn(
-                      'w-5 h-5 text-muted/50 flex-shrink-0 transition-transform duration-medium',
+                      'w-5 h-5 text-text-light flex-shrink-0 transition-transform duration-medium',
                       openIndex === index && 'rotate-180'
                     )}
                     aria-hidden="true"
                   />
                 </summary>
                 <div className="px-6 lg:px-8 pb-6 lg:pb-8 animate-in">
-                  <p className="text-body text-muted/80">{faq.answer}</p>
+                  <p className="text-body text-text-muted">{faq.answer}</p>
                 </div>
               </details>
             </ScrollReveal>
