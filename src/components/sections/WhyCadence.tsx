@@ -1,74 +1,127 @@
 'use client'
 
-import { ScrollReveal, StaggerContainer } from '@/components/motion/ScrollReveal'
-import { Card } from '@/components/ui/Card'
-import { SectionHeading } from '@/components/ui/SectionHeading'
+import { motion } from 'motion/react'
+import Link from 'next/link'
 
-const principles = [
+const tenets = [
   {
-    id: 'business-first',
-    title: 'Business First',
-    description: 'Technology should disappear behind results. We don\'t lead with AI models or platforms—we lead with your operational problem and the measurable outcome you need. The tech is just the implementation detail.',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-        <path d="M2 17l10 5 10-5" />
-        <path d="M2 12l10 5 10-5" />
-      </svg>
-    ),
+    numeral: '01',
+    headline: 'Zero throwaway demos. Only production-grade plumbing.',
+    body: 'We do not build toy prototypes or proof-of-concepts that stall in boardrooms. Every script, agent, and schema pipeline we construct is designed to withstand enterprise volume and run deterministically on day one.',
+    accent: 'PRODUCTION DISCIPLINE',
   },
   {
-    id: 'your-workflow',
-    title: 'Built Around Your Workflow',
-    description: 'No forced software migration. No "rip and replace." We integrate with the tools your team already uses—WhatsApp, email, ERP, CRM, spreadsheets—and automate the handoffs between them.',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M12 3v12" />
-        <path d="M3 12h18" />
-        <path d="M12 3a6 6 0 0 0 0 12" />
-        <path d="M12 3a6 6 0 0 1 0 12" />
-      </svg>
-    ),
+    numeral: '02',
+    headline: 'Deterministic reliability over hallucinatory magic.',
+    body: 'Generative AI without boundaries is an operational liability. We combine modern language models with strict schema validators, programmatic fallbacks, and human escalation gates to ensure 99.8%+ accuracy.',
+    accent: 'MATHEMATICAL CERTAINTY',
   },
   {
-    id: 'partnership',
-    title: 'Long-Term Partnership',
-    description: 'We improve systems after deployment. Monthly reviews, new automation identification, platform updates, and continuous optimization. You\'re not buying a project—you\'re gaining an automation partner.',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5" />
-        <line x1="12" y1="16" x2="12" y2="16" />
-      </svg>
-    ),
+    numeral: '03',
+    headline: 'In-the-trenches operator shadowing, not remote speculation.',
+    body: 'True operational friction is messy and hidden in spreadsheets, private WhatsApp groups, and dock receipts. We embed directly with your operators to diagnose real friction before writing a single line of architecture.',
+    accent: 'GROUND-TRUTH DISCOVERY',
   },
 ]
 
 export function WhyCadence() {
   return (
-    <section id="about" className="section bg-surface-alt/50" aria-labelledby="why-heading">
-      <div className="container">
-        <div className="max-w-3xl mx-auto text-center mb-[48px]">
-          <SectionHeading
-            eyebrow="Why Cadence"
-            title="Three principles that guide every engagement"
-            description="We're not a software vendor. We're an implementation partner. These principles ensure every project delivers lasting value, not just a demo."
-            align="center"
-          />
+    <section id="manifesto" className="editorial-section bg-background border-t border-border overflow-hidden" aria-labelledby="manifesto-heading">
+      {/* Background soft blue ambient lighting */}
+      <div
+        className="pointer-events-none absolute bottom-1/4 right-[-10%] w-[700px] h-[700px] rounded-full opacity-35"
+        style={{
+          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.09) 0%, rgba(24, 198, 163, 0.05) 45%, transparent 70%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="editorial-container">
+        {/* Broken Grid Section Top */}
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 pb-16 border-b border-border mb-20 items-end">
+          <div className="lg:col-span-8">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              <span className="editorial-tag">The Cadence Manifesto</span>
+            </div>
+            <h2
+              id="manifesto-heading"
+              className="text-display-lg font-bold tracking-tight text-text leading-[0.98] text-balance"
+              style={{ fontSize: 'clamp(40px, 5.2vw, 76px)' }}
+            >
+              "Most enterprise AI fails because it tries to think instead of execute."
+            </h2>
+          </div>
+
+          <div className="lg:col-span-4">
+            <p className="text-body-lg text-text-muted leading-relaxed text-balance">
+              Cadence was founded on a simple architectural conviction: businesses do not need more chat windows. They need autonomous nervous systems that move data with zero human lag.
+            </p>
+          </div>
         </div>
 
-        <StaggerContainer baseDelay={100} staggerDelay={100} className="grid md:grid-cols-3 gap-[24px]">
-          {principles.map((principle, index) => (
-            <ScrollReveal key={principle.id} delay={index * 100}>
-              <Card variant="default" padding="lg" className="h-full">
-                <div className="w-14 h-14 rounded-xl bg-accent-soft flex items-center justify-center text-accent mb-6">
-                  {principle.icon}
+        {/* Broken Asymmetrical Editorial Tenet Columns */}
+        <div className="space-y-16 lg:space-y-24">
+          {tenets.map((tenet, idx) => {
+            const isEven = idx % 2 === 1
+
+            return (
+              <div
+                key={tenet.numeral}
+                className={`grid lg:grid-cols-12 gap-8 lg:gap-16 items-start ${
+                  isEven ? 'lg:pl-20' : 'lg:pr-20'
+                }`}
+              >
+                {/* Numeral and Badge Column */}
+                <div className="lg:col-span-3">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-5xl lg:text-6xl font-extrabold text-text/20 tracking-tighter">
+                      {tenet.numeral}
+                    </span>
+                    <span className="font-mono text-[11px] uppercase tracking-widest text-accent font-bold">
+                      {tenet.accent}
+                    </span>
+                  </div>
                 </div>
-                <h3 className="text-card-title font-semibold tracking-tight text-text mb-4">{principle.title}</h3>
-                <p className="text-body-sm text-text-muted">{principle.description}</p>
-              </Card>
-            </ScrollReveal>
-          ))}
-        </StaggerContainer>
+
+                {/* Headline Column */}
+                <div className="lg:col-span-5">
+                  <h3 className="text-card-title font-bold tracking-tight text-text leading-snug">
+                    {tenet.headline}
+                  </h3>
+                </div>
+
+                {/* Description Column */}
+                <div className="lg:col-span-4">
+                  <p className="text-body text-text-muted leading-relaxed">
+                    {tenet.body}
+                  </p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Pull Quote Box */}
+        <div className="mt-28 p-8 md:p-14 rounded-card bg-[#0B1020] text-white border border-white/10 relative overflow-hidden shadow-floating">
+          <div className="relative z-10 max-w-3xl">
+            <span className="font-mono text-xs uppercase tracking-widest text-accent font-bold mb-4 block">
+              Architectural Standard // 2024–2025
+            </span>
+            <p className="text-display-lg font-medium tracking-tight text-white/95 leading-snug mb-8" style={{ fontSize: 'clamp(24px, 3.2vw, 42px)' }}>
+              "We take operations that take four hours of manual keyboard entry and turn them into 120-second background events. That is the only benchmark that matters."
+            </p>
+            <div className="flex items-center gap-4 pt-6 border-t border-white/15">
+              <div className="w-10 h-10 rounded-full bg-accent text-[#0B1020] flex items-center justify-center font-bold text-sm">
+                CD
+              </div>
+              <div>
+                <div className="font-sans font-bold text-sm text-white">Cadence Systems Council</div>
+                <div className="font-mono text-xs text-white/60">New York • San Francisco</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

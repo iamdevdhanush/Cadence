@@ -1,75 +1,62 @@
 'use client'
 
-import { ScrollReveal } from '@/components/motion/ScrollReveal'
+import { motion } from 'motion/react'
 
-const tools = [
-  { name: 'OpenAI', logo: 'openai' },
-  { name: 'Claude', logo: 'claude' },
-  { name: 'n8n', logo: 'n8n' },
-  { name: 'Google Workspace', logo: 'google' },
-  { name: 'WhatsApp', logo: 'whatsapp' },
-  { name: 'Slack', logo: 'slack' },
-  { name: 'Notion', logo: 'notion' },
+const integrations = [
+  { name: 'Oracle NetSuite', spec: 'ERP & Inventory Sync', category: 'Enterprise Ledger' },
+  { name: 'WhatsApp Business API', spec: 'Meta Tier-1 Pipeline', category: 'Conversational' },
+  { name: 'Salesforce CRM', spec: 'Bidirectional Stream', category: 'Customer Record' },
+  { name: 'QuickBooks Online', spec: 'AP / AR Auto-Reconciliation', category: 'Financials' },
+  { name: 'OpenAI / GPT-4o', spec: 'Deterministic Extraction', category: 'Intelligence' },
+  { name: 'Anthropic Claude 3.5', spec: 'Complex Doc Reasoning', category: 'VLM & Logic' },
+  { name: 'PostgreSQL & Redis', spec: 'Zero-Latency State Store', category: 'Infrastructure' },
 ]
-
-const logos: Record<string, React.ReactNode> = {
-  openai: (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="#0F172A" aria-hidden="true">
-      <path d="M16.008 0C7.17 0 0 7.17 0 16c0 8.83 7.17 16 16.008 16 8.836 0 16-7.17 16-16C32.008 7.17 24.838 0 16.008 0zm3.312 22.575c-.24.33-.733.47-1.077.17a13.59 13.59 0 01-3.76-1.066c-.28-.1-.548-.14-.83-.14-.315 0-.597.05-.85.16-.5.2-.94.56-1.28.9-.335.35-.613.73-.828 1.12a10.93 10.93 0 01-3.078 2.53c-.768.46-1.6.68-2.48.68-1.263 0-2.39-.38-3.375-1.125-1.02-.78-1.53-1.88-1.53-3.29 0-1.868.765-3.35 2.29-4.44 1.03-1.1 2.285-1.65 3.76-1.65.394 0 .777.04 1.15.11.46.08.89.25 1.29.49.39.24.725.59.99.96.15.22.25.47.25.73 0 .643-.212 1.2-.64 1.66a2.48 2.48 0 01-1.75.68c-.74 0-1.37-.27-1.88-.8-.5-.53-.75-1.21-.75-2.036 0-.96.334-1.79 1.004-2.48.67-.68 1.57-1.02 2.69-1.02.957 0 1.826.25 2.605.73.77.49 1.33 1.17 1.7 1.99.36.81.54 1.83.54 3.05 0 1.065-.18 1.95-.53 2.66zm-3.645-4.89c0-.84-.145-1.53-.44-2.05-.29-.5-.73-.74-1.31-.74-.553 0-.98.214-1.28.645-.29.42-.43.99-.43 1.706 0 .746.135 1.33.404 1.75.27.42.7.63 1.28.63.58 0 1.03-.25 1.35-.76zm-6.592-3.405c-.16-.02-.31-.03-.46-.03-.59 0-1.14.13-1.63.38-.5.25-.94.67-1.31 1.25-.37.58-.55 1.31-.55 2.17 0 .98.22 1.82.66 2.52.44.69 1.02 1.04 1.74 1.04.37 0 .71-.04 1.03-.11.39-.1.7-.28 1.0-.52.32-.24.55-.58.67-1.02l.04-.21h1.4v-1.15h-1.4v-1.03c0-.56-.08-1.02-.24-1.38-.16-.36-.42-.65-.78-.87-.36-.22-.8-.33-1.3-.33z" />
-    </svg>
-  ),
-  claude: (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="#0F172A" aria-hidden="true">
-      <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm5.916 11.833c-.207-.207-.524-.207-.73 0l-5.542 5.542-1.427-1.427c-.207-.207-.524-.207-.73 0l-1.017 1.017c-.207.207-.207.524 0 .73l2.5 2.5c.207.207.524.207.73 0l5.79-5.79c.207-.207.207-.524 0-.73L16.938 10.81c-.207-.207-.207-.524 0-.73l1.017-1.017c.207-.207.524-.207.73 0l5.542 5.542c.207.207.207.524 0 .73l-1.017 1.017c-.207.207-.524.207-.73 0l-2.5-2.5c-.207-.207-.524-.207-.73 0l-5.79 5.79c-.207.207-.207.524 0 .73l1.017 1.017c.207.207.524.207.73 0l2.5-2.5c.207-.207.207-.524 0-.73l-5.542-5.542c-.207-.207-.207-.524 0-.73l1.017-1.017c.207-.207.524-.207.73 0l5.542 5.542c.207.207.207.524 0 .73l-1.017 1.017c-.207.207-.524.207-.73 0l-2.5-2.5z" />
-    </svg>
-  ),
-  n8n: (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="#0F172A" aria-hidden="true">
-      <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 28.8c-7.07 0-12.8-5.73-12.8-12.8S8.93 3.2 16 3.2s12.8 5.73 12.8 12.8-5.73 12.8-12.8 12.8zm-4-10.8c0 1.1-.9 2-2 2s-2-.9-2-2 0-2 2-2 2 .9 2 2zm8 0c0 1.1-.9 2-2 2s-2-.9-2-2 0-2 2-2 2 .9 2 2zm-4-8.8c0 1.1-.9 2-2 2s-2-.9-2-2 0-2 2-2 2 .9 2 2z" />
-    </svg>
-  ),
-  google: (
-    <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
-      <path fill="#4285F4" d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm4.5 12.5c0 .8-.2 1.5-.5 2H16v4.5h4.5c-.5 1.2-1.4 2.1-2.6 2.8v2.7c1.6-.7 2.8-2 2.8-3.5 0-2.5-1.7-4.5-4.2-4.5-1.2 0-2.3.5-3.1 1.3l-1.1-1.1C16.5 6.5 18.4 5 20.5 5c2.8 0 5 2.2 5 5s-2.2 5-5 5zm-11.5 0c0-2.8 2.2-5 5-5 1.2 0 2.3.5 3.1 1.3l1.1 1.1c-.8.8-1.8 1.3-3.1 1.3-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5c1.1 0 2 .4 2.6 1v-2.7C17.4 7.1 16.5 6.2 15.3 6c-2.5 0-4.2 2-4.2 4.5z"/>
-      <path fill="#34A853" d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm-7 21.5c-1.2 0-2.3-.5-3.1-1.3l-1.1 1.1C6.5 23.5 8.4 25 10.5 25c2.5 0 4.5-2 4.5-4.5s-2-4.5-4.5-4.5c-1.1 0-2 .4-2.6 1v-2.7c3.1.2 5.5 2.6 5.5 5.7 0 1.2-.4 2.3-1 3.1l1.1 1.1C22.5 14.5 21 12.8 19 12.8c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5c1.1 0 2-.4 2.6-1v2.7c-3.1-.2-5.5-2.6-5.5-5.7z"/>
-      <path fill="#FBBC05" d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm7-3.5c-.8 1.2-1.8 2.1-3.1 2.8v-2.7c1.1-.8 1.8-1.8 2.2-3.1-.3-.9-.9-1.7-1.7-2.2-.8-.5-1.7-.8-2.6-.8-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5c1.1 0 2-.4 2.6-1v2.7c-3.1-.2-5.5-2.6-5.5-5.7 0-1.2.4-2.3 1-3.1l-1.1-1.1C9.5 8.5 11.4 7 13.5 7c2.5 0 4.5 2 4.5 4.5s-2 4.5-4.5 4.5c-1.1 0-2-.4-2.6 1v2.7c3.1.2 5.5 2.6 5.5 5.7z"/>
-      <path fill="#EA4335" d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm-4.5 17.5c0-1.2.2-2.3.5-3.1h-4.5c-.8.8-1.4 1.8-1.8 3.1 0 .8.2 1.6.5 2.3h4.5c-.3.7-.5 1.5-.5 2.3v2.7c1.6.7 2.8 2 2.8 3.5 0 2.5-1.7 4.5-4.2 4.5-1.2 0-2.3-.5-3.1-1.3l-1.1 1.1C16.5 29.5 18.4 31 20.5 31c2.8 0 5-2.2 5-5s-2.2-5-5-5z"/>
-    </svg>
-  ),
-  whatsapp: (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="#0F172A" aria-hidden="true">
-      <path d="M16 0C7.163 0 0 7.163 0 16c0 3.9 1.6 7.4 4.2 9.9L0 32l5.4-1.6c2.7 1 5.6 1.6 8.6 1.6 8.837 0 16-7.163 16-16S24.837 0 16 0zm0 4c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zm6.5-4c0 1.4-1.1 2.5-2.5 2.5h-8c-1.4 0-2.5-1.1-2.5-2.5v-2c0-1.4 1.1-2.5 2.5-2.5h8c1.4 0 2.5 1.1 2.5 2.5v2z" />
-    </svg>
-  ),
-  slack: (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="#0F172A" aria-hidden="true">
-      <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm-2 6c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2v-4c0-1.1-.9-2-2-2zm-6-8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2s2-.9 2-2v-4c0-1.1-.9-2-2-2zm12 8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2s-2 .9-2 2v4c0 1.1.9 2 2 2z" />
-    </svg>
-  ),
-  notion: (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="#0F172A" aria-hidden="true">
-      <path d="M16 0C7.163 0 0 7.163 0 16s7.163 16 16 16 16-7.163 16-16S24.837 0 16 0zm0 28c-6.627 0-12-5.373-12-12S9.373 4 16 4s12 5.373 12 12-5.373 12-12 12zm-2-20h4v16h-4V8zm-6 0h4v16h-4V8zm12 0h4v16h-4V8z" />
-    </svg>
-  ),
-}
 
 export function TrustBar() {
   return (
-    <section className="border-y border-border py-12" aria-labelledby="trust-title">
-      <div className="container">
-        <ScrollReveal delay={0}>
-          <p id="trust-title" className="text-caption font-medium tracking-wider uppercase text-text-light text-center mb-8">
-            Built with trusted automation tools
-          </p>
-        </ScrollReveal>
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
-          {tools.map((tool, index) => (
-            <ScrollReveal key={tool.name} delay={index * 50} className="opacity-50 hover:opacity-100 transition-opacity duration-medium">
-              <span className="flex items-center gap-2 text-body-sm text-text-light">
-                {logos[tool.logo]}
-              </span>
-            </ScrollReveal>
+    <section className="py-16 border-y border-border bg-surface/50 overflow-hidden" aria-labelledby="ecosystem-heading">
+      <div className="editorial-container">
+        <div className="flex flex-col md:flex-row md:items-center justify-between pb-8 border-b border-border/80 mb-8 gap-4">
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-accent" />
+            <span id="ecosystem-heading" className="font-mono text-xs uppercase tracking-widest text-text font-bold">
+              Engineering Integrations & Enterprise Standards
+            </span>
+          </div>
+          <div className="font-mono text-[11px] text-text-light uppercase tracking-wider">
+            Deterministic Connectors • 99.99% Up-time SLA
+          </div>
+        </div>
+
+        {/* Editorial Technology Node Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {integrations.map((item, idx) => (
+            <motion.div
+              key={item.name}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.05 }}
+              className="p-4 rounded-card-sm bg-surface border border-border hover:border-accent/40 transition-colors shadow-subtle group"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-text-light group-hover:text-accent transition-colors">
+                  {item.category}
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-accent/60" />
+              </div>
+              <div className="font-sans font-bold text-sm text-text mb-0.5">{item.name}</div>
+              <div className="font-mono text-[11px] text-text-muted">{item.spec}</div>
+            </motion.div>
           ))}
+          <div className="p-4 rounded-card-sm bg-accent-soft/30 border border-accent/20 flex flex-col justify-center">
+            <div className="font-mono text-[10px] uppercase tracking-wider text-accent font-bold mb-1">
+              Custom Connectors
+            </div>
+            <div className="font-sans font-semibold text-xs text-text">
+              Proprietary internal APIs & legacy databases supported
+            </div>
+          </div>
         </div>
       </div>
     </section>

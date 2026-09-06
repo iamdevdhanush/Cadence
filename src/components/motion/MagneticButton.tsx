@@ -7,34 +7,34 @@ interface MagneticButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElemen
   children: React.ReactNode
   strength?: number
   className?: string
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'dark' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   asChild?: boolean
 }
 
-const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium transition-all duration-medium rounded-btn focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:cursor-not-allowed magnetic-btn relative overflow-visible'
+const baseStyles =
+  'relative inline-flex items-center justify-center gap-3 font-medium transition-colors duration-200 select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2'
 
 const variants = {
-  primary: 'bg-accent text-white hover:bg-accent-hover hover:shadow-glow active:scale-[0.98]',
-  secondary: 'bg-transparent border border-border text-text hover:bg-surface-alt hover:border-border-strong active:scale-[0.98]',
+  primary:
+    'bg-[#0B1020] text-white hover:bg-black rounded-pill shadow-elevated border border-black/10',
+  secondary:
+    'bg-surface/80 backdrop-blur-md text-[#0B1020] border border-border hover:border-[#0B1020]/30 hover:bg-surface rounded-pill shadow-subtle',
+  dark:
+    'bg-[#18C6A3] text-[#0B1020] font-semibold hover:bg-[#13A889] hover:text-white rounded-pill shadow-glow-emerald',
+  ghost:
+    'bg-transparent text-[#0B1020] hover:text-accent font-medium rounded-pill',
 }
 
 const sizes = {
-  sm: 'px-4 py-2 text-sm',
-  md: 'px-8 py-4 text-body-sm',
-  lg: 'px-10 py-5 text-body',
-}
-
-function createStyle(position: { x: number; y: number }, isHovering: boolean) {
-  return {
-    transform: `translate(${position.x}px, ${position.y}px)`,
-    transition: isHovering ? 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-  } as React.CSSProperties
+  sm: 'px-4 py-2 text-xs tracking-wider uppercase font-mono',
+  md: 'px-7 py-3.5 text-sm tracking-tight',
+  lg: 'px-9 py-4 text-base tracking-tight',
 }
 
 export function MagneticButton({
   children,
-  strength = 0.3,
+  strength = 0.25,
   className,
   variant = 'primary',
   size = 'md',
@@ -61,18 +61,15 @@ export function MagneticButton({
       const x = me.clientX - rect.left - rect.width / 2
       const y = me.clientY - rect.top - rect.height / 2
       setPosition({ x: x * strength, y: y * strength })
-      onMouseMove?.(me as unknown as React.MouseEvent<HTMLButtonElement>)
     }
 
-    const handleMouseLeave = (e: Event) => {
+    const handleMouseLeave = () => {
       setPosition({ x: 0, y: 0 })
       setIsHovering(false)
-      onMouseLeave?.(e as unknown as React.MouseEvent<HTMLButtonElement>)
     }
 
-    const handleMouseEnter = (e: Event) => {
+    const handleMouseEnter = () => {
       setIsHovering(true)
-      onMouseEnter?.(e as unknown as React.MouseEvent<HTMLButtonElement>)
     }
 
     element.addEventListener('mousemove', handleMouseMove)
@@ -84,30 +81,27 @@ export function MagneticButton({
       element.removeEventListener('mouseleave', handleMouseLeave)
       element.removeEventListener('mouseenter', handleMouseEnter)
     }
-  }, [strength, onMouseMove, onMouseLeave, onMouseEnter])
+  }, [strength, ref])
+
+  const styleObj: React.CSSProperties = {
+    transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+    transition: isHovering
+      ? 'transform 0.12s cubic-bezier(0.25, 1, 0.5, 1)'
+      : 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+  }
 
   const classNameStr = cn(baseStyles, variants[variant], sizes[size], className)
-  const styleObj = createStyle(position, isHovering)
 
   if (asChild) {
     return (
-      <span
-        ref={spanRef}
-        className={classNameStr}
-        style={styleObj}
-      >
+      <span ref={spanRef} className={classNameStr} style={styleObj}>
         {children}
       </span>
     )
   }
 
   return (
-    <button
-      ref={buttonRef}
-      className={classNameStr}
-      style={styleObj}
-      {...props}
-    >
+    <button ref={buttonRef} className={classNameStr} style={styleObj} {...props}>
       {children}
     </button>
   )

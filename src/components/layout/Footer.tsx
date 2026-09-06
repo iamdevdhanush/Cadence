@@ -1,139 +1,127 @@
 'use client'
 
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
-
-const footerLinks = {
-  services: [
-    { label: 'AI Workflow Automation', href: '/#services' },
-    { label: 'WhatsApp Automation', href: '/#services' },
-    { label: 'Internal Business Tools', href: '/#services' },
-    { label: 'CRM & ERP Integrations', href: '/#services' },
-  ],
-  company: [
-    { label: 'Our Process', href: '/#process' },
-    { label: 'Our Work', href: '/#work' },
-    { label: 'About Us', href: '/#about' },
-    { label: 'Contact', href: '/#contact' },
-  ],
-  resources: [
-    { label: 'Case Studies', href: '/#work' },
-    { label: 'FAQ', href: '/#faq' },
-    { label: 'Blog', href: '#' },
-    { label: 'Newsletter', href: '#' },
-  ],
-  legal: [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
-    { label: 'Cookie Policy', href: '#' },
-  ],
-}
-
-const socialLinks = [
-  { label: 'Twitter', href: '#', icon: 'twitter' },
-  { label: 'LinkedIn', href: '#', icon: 'linkedin' },
-  { label: 'GitHub', href: '#', icon: 'github' },
-  { label: 'Email', href: 'mailto:hello@cadence.ai', icon: 'mail' },
-]
+import { useState, useEffect } from 'react'
 
 export function Footer() {
+  const [timeNY, setTimeNY] = useState('')
+  const [timeSF, setTimeSF] = useState('')
+  const [timeLDN, setTimeLDN] = useState('')
+
+  useEffect(() => {
+    const updateClocks = () => {
+      const now = new Date()
+      setTimeNY(
+        now.toLocaleTimeString('en-US', {
+          timeZone: 'America/New_York',
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      )
+      setTimeSF(
+        now.toLocaleTimeString('en-US', {
+          timeZone: 'America/Los_Angeles',
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      )
+      setTimeLDN(
+        now.toLocaleTimeString('en-US', {
+          timeZone: 'Europe/London',
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      )
+    }
+
+    updateClocks()
+    const interval = setInterval(updateClocks, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <footer className="bg-surface border-t border-border" role="contentinfo">
-      <div className="container py-16 lg:py-24">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-12 lg:gap-16">
-          <div className="col-span-2 md:col-span-1 lg:col-span-2">
-            <Link href="/" className="text-2xl font-bold tracking-tight text-text mb-6 block" style={{ letterSpacing: '-0.03em' }}>
-              CADENCE
-            </Link>
-            <p className="text-body text-text-muted max-w-xs mb-8">
-              We build AI systems that automate the work your team shouldn't be doing manually.
-            </p>
-            <div className="flex gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  className="text-text-light hover:text-accent transition-colors duration-fast"
-                  aria-label={social.label}
-                  target={social.href.startsWith('http') ? '_blank' : undefined}
-                  rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                >
-                  {social.icon === 'twitter' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.695L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                  )}
-                  {social.icon === 'linkedin' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                  )}
-                  {social.icon === 'github' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-                    </svg>
-                  )}
-                  {social.icon === 'mail' && (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
-                  )}
-                </a>
-              ))}
-            </div>
+    <footer className="bg-[#0B1020] text-white pt-24 pb-16 overflow-hidden relative border-t border-white/10" role="contentinfo">
+      {/* Ambient lighting inside footer */}
+      <div
+        className="pointer-events-none absolute top-0 right-1/4 w-[600px] h-[600px] rounded-full opacity-15"
+        style={{
+          background: 'radial-gradient(circle, rgba(24, 198, 163, 0.3) 0%, rgba(59, 130, 246, 0.2) 50%, transparent 75%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="editorial-container relative z-10">
+        {/* Massive Editorial Statement */}
+        <div className="pb-16 border-b border-white/10 mb-16">
+          <div className="font-mono text-xs uppercase tracking-widest text-accent font-semibold mb-6 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+            <span>Studio Colophon // Autonomous Infrastructure</span>
           </div>
 
-          <nav aria-label="Services">
-            <h3 className="text-caption font-semibold tracking-wider uppercase text-text mb-4">Services</h3>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="text-body-sm text-text-muted hover:text-accent transition-colors duration-fast">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-label="Company">
-            <h3 className="text-caption font-semibold tracking-wider uppercase text-text mb-4">Company</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="text-body-sm text-text-muted hover:text-accent transition-colors duration-fast">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-label="Resources">
-            <h3 className="text-caption font-semibold tracking-wider uppercase text-text mb-4">Resources</h3>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="text-body-sm text-text-muted hover:text-accent transition-colors duration-fast">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <h2
+            className="font-bold tracking-[-0.04em] text-white/95 leading-[0.92] text-balance"
+            style={{ fontSize: 'clamp(44px, 7vw, 108px)' }}
+          >
+            Let&apos;s build the autonomous enterprise.
+          </h2>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-body-sm text-text-light">
-            © {new Date().getFullYear()} Cadence. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6 text-body-sm text-text-light">
-            {footerLinks.legal.map((link) => (
-              <Link key={link.label} href={link.href} className="hover:text-accent transition-colors duration-fast">
-                {link.label}
-              </Link>
-            ))}
+        {/* Studio Timezones & Locations */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-16 border-b border-white/10 mb-16 font-mono text-xs">
+          <div>
+            <div className="text-white/40 uppercase tracking-wider mb-1">New York // Headquarters</div>
+            <div className="text-lg font-bold text-white font-mono">{timeNY || '12:00:00'} EST</div>
+            <div className="text-white/60 text-[11px] mt-1">450 Lexington Ave, Manhattan</div>
+          </div>
+
+          <div>
+            <div className="text-white/40 uppercase tracking-wider mb-1">San Francisco // Lab</div>
+            <div className="text-lg font-bold text-white font-mono">{timeSF || '09:00:00'} PST</div>
+            <div className="text-white/60 text-[11px] mt-1">555 Mission St, SOMA</div>
+          </div>
+
+          <div>
+            <div className="text-white/40 uppercase tracking-wider mb-1">London // European Desk</div>
+            <div className="text-lg font-bold text-white font-mono">{timeLDN || '17:00:00'} GMT</div>
+            <div className="text-white/60 text-[11px] mt-1">100 Bishopsgate, City</div>
+          </div>
+
+          <div>
+            <div className="text-white/40 uppercase tracking-wider mb-1">Direct Inquiries</div>
+            <div className="text-lg font-bold text-accent font-mono">partners@cadence.ai</div>
+            <div className="text-white/60 text-[11px] mt-1">SLA Guarantee // 12h Reply</div>
+          </div>
+        </div>
+
+        {/* Navigation & Legal Links */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 pt-4">
+          <div className="flex flex-wrap items-center gap-8 font-mono text-xs">
+            <Link href="#services" className="text-white/70 hover:text-accent transition-colors">
+              01 // Capabilities
+            </Link>
+            <Link href="#process" className="text-white/70 hover:text-accent transition-colors">
+              02 // Methodology
+            </Link>
+            <Link href="#work" className="text-white/70 hover:text-accent transition-colors">
+              03 // Dossiers
+            </Link>
+            <Link href="#manifesto" className="text-white/70 hover:text-accent transition-colors">
+              04 // Manifesto
+            </Link>
+            <Link href="#brief" className="text-accent hover:underline">
+              05 // Initiate Brief
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-6 font-mono text-xs text-white/40">
+            <span>© {new Date().getFullYear()} Cadence Systems Inc.</span>
+            <span>All Rights Reserved.</span>
           </div>
         </div>
       </div>

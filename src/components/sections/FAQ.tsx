@@ -1,43 +1,38 @@
 'use client'
 
 import { useState } from 'react'
-import { ScrollReveal, StaggerContainer } from '@/components/motion/ScrollReveal'
-import { SectionHeading } from '@/components/ui/SectionHeading'
-import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 
-const faqs = [
+const queries = [
   {
-    question: 'Do I need to buy new software?',
-    answer: 'No. We build on top of the tools you already use—WhatsApp, email, your ERP, CRM, accounting software, spreadsheets. If a tool has an API (most do), we can automate it. If it doesn\'t, we find a workaround. You keep your licenses; we just connect the dots.',
+    numeral: '01',
+    question: 'How does Cadence integrate with legacy ERPs and non-API systems?',
+    answer:
+      'We do not force rip-and-replace migrations. If your platform exposes an API, we build direct webhooks and event listeners. If your system is legacy on-prem (e.g., AS400, older SAP, or custom SQL databases), we build secure tunnel adapters and headless bridge services with cryptographic audit trails.',
   },
   {
-    question: 'How long does implementation take?',
-    answer: 'Typical pilot: 2–4 weeks from kickoff to live. Full rollout: 6–12 weeks depending on scope. We move in phases—audit, design, build, deploy—so you see value at each stage. No 6-month "big bang" deliveries.',
+    numeral: '02',
+    question: 'What is the production deployment timeline for a custom AI pipeline?',
+    answer:
+      'A production pilot typically runs within 14 to 21 calendar days. This includes real-world shadow auditing, schema design, dual-run testing against live production traffic, and safe phased rollout with zero downtime.',
   },
   {
-    question: 'Can you work with WhatsApp?',
-    answer: 'Yes. We\'re official WhatsApp Business Solution Providers. We handle the Meta verification, template approval, API integration, and ongoing compliance. Order capture, support automation, notifications, status updates—all native in WhatsApp.',
+    numeral: '03',
+    question: 'How do you prevent hallucination in business-critical financial workflows?',
+    answer:
+      'We never deploy unconstrained probabilistic models into transactional paths. We architect deterministic state machines where AI is strictly used for extraction and vector mapping, bounded by mathematical assertions, schema enforcement (Zod/TypeScript), and automated fallback loops.',
   },
   {
-    question: 'What if my team isn\'t technical?',
-    answer: 'That\'s exactly who we build for. The automations run in the background. Your team keeps using WhatsApp, email, and their usual tools—just without the manual copy-paste. We provide training, documentation, and ongoing support so nothing breaks when we\'re not there.',
+    numeral: '04',
+    question: 'What are the technical prerequisites for Meta WhatsApp Business API integration?',
+    answer:
+      'Cadence manages the end-to-end Meta Business verification, official phone number provisioning, HSM message template approvals, and webhook routing. We hand you a turnkey conversational gateway configured directly to your CRM and ERP.',
   },
   {
-    question: 'Do you provide ongoing support?',
-    answer: 'Yes. Every engagement includes a retainer for monitoring, maintenance, and optimization. We run monthly health checks, handle platform updates (API changes, deprecations), and proactively identify new automation opportunities as your operations evolve.',
-  },
-  {
-    question: 'How do you charge?',
-    answer: 'Fixed-fee pilot to prove value, then monthly retainer based on scope. No per-transaction fees, no seat licenses, no surprise invoices. The pilot fee rolls into the retainer if you continue. If it doesn\'t work, you\'ve only invested the pilot amount.',
-  },
-  {
-    question: 'What makes you different from an integration agency?',
-    answer: 'We don\'t just connect APIs—we redesign the workflow. Most integrators map field A to field B. We ask: "Why does this field exist? Can we eliminate this step? What happens when it fails?" The result is fewer moving parts, not more.',
-  },
-  {
-    question: 'Can you handle our compliance requirements?',
-    answer: 'We work with distributors, manufacturers, and logistics companies who deal with PII, financial data, and industry regulations. We implement encryption, access controls, audit logs, and data retention policies. We\'ll sign your NDA and DPA before day one.',
+    numeral: '05',
+    question: 'What does post-deployment governance and SLA entail?',
+    answer:
+      'All enterprise deployments include a dedicated engineering SLA with continuous drift monitoring, automated token efficiency audits, upstream API deprecation fixes, and monthly executive reviews of operational hours reclaimed.',
   },
 ]
 
@@ -45,46 +40,77 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="section" aria-labelledby="faq-heading">
-      <div className="container">
-        <div className="max-w-3xl mx-auto text-center mb-[48px]">
-          <SectionHeading
-            eyebrow="FAQ"
-            title="Questions we hear before every engagement"
-            description="Straight answers. No sales fluff."
-            align="center"
-          />
+    <section id="advisory" className="editorial-section bg-background border-t border-border" aria-labelledby="faq-heading">
+      <div className="editorial-container">
+        {/* Section Header */}
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 pb-12 border-b border-border mb-16 items-end">
+          <div className="lg:col-span-7">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              <span className="editorial-tag">Technical Advisory</span>
+            </div>
+            <h2
+              id="faq-heading"
+              className="text-section-xl font-bold tracking-tight text-text text-balance"
+              style={{ fontSize: 'clamp(32px, 4vw, 54px)' }}
+            >
+              Architectural & Engagement Inquiries.
+            </h2>
+          </div>
+          <div className="lg:col-span-5">
+            <p className="text-body text-text-muted">
+              Direct technical answers to the most common questions raised by CTOs, VPs of Operations, and Managing Directors prior to initiating a discovery brief.
+            </p>
+          </div>
         </div>
 
-        <StaggerContainer baseDelay={100} staggerDelay={50} className="max-w-3xl mx-auto">
-          {faqs.map((faq, index) => (
-            <ScrollReveal key={index} delay={index * 50}>
-              <details
-                className={cn(
-                  'group bg-surface border border-border rounded-card overflow-hidden transition-all duration-medium',
-                  'hover:border-border-strong',
-                  openIndex === index && 'bg-surface-alt'
-                )}
-                open={openIndex === index}
-                onToggle={() => setOpenIndex(openIndex === index ? null : index)}
-              >
-                <summary className="flex items-center justify-between p-6 lg:p-8 cursor-pointer list-none">
-                  <h3 className="text-body-lg font-medium text-text pr-10">{faq.question}</h3>
-                  <ChevronDown
-                    className={cn(
-                      'w-5 h-5 text-text-light flex-shrink-0 transition-transform duration-medium',
-                      openIndex === index && 'rotate-180'
-                    )}
-                    aria-hidden="true"
-                  />
-                </summary>
-                <div className="px-6 lg:px-8 pb-6 lg:pb-8 animate-in">
-                  <p className="text-body text-text-muted">{faq.answer}</p>
-                </div>
-              </details>
-            </ScrollReveal>
-          ))}
-        </StaggerContainer>
+        {/* Minimalist Editorial Q&A List (Hairline rules, zero cards) */}
+        <div className="divide-y divide-border/80 border-y border-border/80">
+          {queries.map((q, idx) => {
+            const isOpen = openIndex === idx
+
+            return (
+              <div key={q.numeral} className="py-8 transition-colors">
+                <button
+                  onClick={() => setOpenIndex(isOpen ? null : idx)}
+                  className="w-full text-left flex items-start justify-between gap-6 group focus-visible:outline-none"
+                  aria-expanded={isOpen}
+                >
+                  <div className="flex items-baseline gap-6 sm:gap-10">
+                    <span className="font-mono text-sm sm:text-base font-bold text-accent">
+                      {q.numeral}
+                    </span>
+                    <h3 className="font-sans text-xl sm:text-2xl font-bold tracking-tight text-text group-hover:text-accent transition-colors">
+                      {q.question}
+                    </h3>
+                  </div>
+
+                  <div className="font-mono text-xl text-text-light group-hover:text-text transition-transform duration-200">
+                    {isOpen ? '—' : '+'}
+                  </div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-6 pl-12 sm:pl-16 pr-8 max-w-3xl">
+                        <p className="text-body-lg text-text-muted font-normal leading-relaxed">
+                          {q.answer}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
