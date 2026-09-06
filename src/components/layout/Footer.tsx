@@ -42,10 +42,10 @@ export function Footer() {
       <div className="container py-16 lg:py-24">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-12 lg:gap-16">
           <div className="col-span-2 md:col-span-1 lg:col-span-2">
-            <Link href="/" className="text-2xl font-bold tracking-tight text-text mb-6 block" style={{ letterSpacing: '-0.05em' }}>
+            <Link href="/" className="text-2xl font-bold tracking-tight text-text mb-6 block" style={{ letterSpacing: '-0.03em' }}>
               CADENCE
             </Link>
-            <p className="text-body text-muted/70 max-w-xs mb-8">
+            <p className="text-body text-text-muted max-w-xs mb-8">
               We build AI systems that automate the work your team shouldn't be doing manually.
             </p>
             <div className="flex gap-4">
@@ -53,7 +53,7 @@ export function Footer() {
                 <a
                   key={social.label}
                   href={social.href}
-                  className="text-muted/60 hover:text-accent transition-colors duration-fast"
+                  className="text-text-light hover:text-accent transition-colors duration-fast"
                   aria-label={social.label}
                   target={social.href.startsWith('http') ? '_blank' : undefined}
                   rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
@@ -85,11 +85,11 @@ export function Footer() {
           </div>
 
           <nav aria-label="Services">
-            <h3 className="text-sm font-semibold tracking-wider uppercase text-text mb-4">Services</h3>
+            <h3 className="text-caption font-semibold tracking-wider uppercase text-text mb-4">Services</h3>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-body-sm text-muted/70 hover:text-accent transition-colors duration-fast">
+                  <Link href={link.href} className="text-body-sm text-text-muted hover:text-accent transition-colors duration-fast">
                     {link.label}
                   </Link>
                 </li>
@@ -98,11 +98,11 @@ export function Footer() {
           </nav>
 
           <nav aria-label="Company">
-            <h3 className="text-sm font-semibold tracking-wider uppercase text-text mb-4">Company</h3>
+            <h3 className="text-caption font-semibold tracking-wider uppercase text-text mb-4">Company</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-body-sm text-muted/70 hover:text-accent transition-colors duration-fast">
+                  <Link href={link.href} className="text-body-sm text-text-muted hover:text-accent transition-colors duration-fast">
                     {link.label}
                   </Link>
                 </li>
@@ -111,11 +111,11 @@ export function Footer() {
           </nav>
 
           <nav aria-label="Resources">
-            <h3 className="text-sm font-semibold tracking-wider uppercase text-text mb-4">Resources</h3>
+            <h3 className="text-caption font-semibold tracking-wider uppercase text-text mb-4">Resources</h3>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-body-sm text-muted/70 hover:text-accent transition-colors duration-fast">
+                  <Link href={link.href} className="text-body-sm text-text-muted hover:text-accent transition-colors duration-fast">
                     {link.label}
                   </Link>
                 </li>
@@ -125,10 +125,10 @@ export function Footer() {
         </div>
 
         <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-body-sm text-muted/50">
+          <p className="text-body-sm text-text-light">
             © {new Date().getFullYear()} Cadence. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-body-sm text-muted/50">
+          <div className="flex items-center gap-6 text-body-sm text-text-light">
             {footerLinks.legal.map((link) => (
               <Link key={link.label} href={link.href} className="hover:text-accent transition-colors duration-fast">
                 {link.label}
